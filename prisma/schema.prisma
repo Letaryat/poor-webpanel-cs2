@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model zenith_map_stats {
+  steam_id        String @db.VarChar(32)
+  map_name        String @db.VarChar(64)
+  kills           Int    @default(0)
+  first_blood     Int    @default(0)
+  deaths          Int    @default(0)
+  assists         Int    @default(0)
+  shoots          Int    @default(0)
+  hits_taken      Int    @default(0)
+  hits_given      Int    @default(0)
+  headshots       Int    @default(0)
+  head_hits       Int    @default(0)
+  chest_hits      Int    @default(0)
+  stomach_hits    Int    @default(0)
+  left_arm_hits   Int    @default(0)
+  right_arm_hits  Int    @default(0)
+  left_leg_hits   Int    @default(0)
+  right_leg_hits  Int    @default(0)
+  neck_hits       Int    @default(0)
+  unused_hits     Int    @default(0)
+  gear_hits       Int    @default(0)
+  special_hits    Int    @default(0)
+  grenades        Int    @default(0)
+  mvp             Int    @default(0)
+  round_win       Int    @default(0)
+  round_lose      Int    @default(0)
+  game_win        Int    @default(0)
+  game_lose       Int    @default(0)
+  rounds_overall  Int    @default(0)
+  rounds_ct       Int    @default(0)
+  rounds_t        Int    @default(0)
+  bomb_planted    Int    @default(0)
+  bomb_defused    Int    @default(0)
+  hostage_rescued Int    @default(0)
+  hostage_killed  Int    @default(0)
+  no_scope_kill   Int    @default(0)
+  penetrated_kill Int    @default(0)
+  thru_smoke_kill Int    @default(0)
+  flashed_kill    Int    @default(0)
+  dominated_kill  Int    @default(0)
+  revenge_kill    Int    @default(0)
+  assist_flash    Int    @default(0)
+
+  @@id([steam_id, map_name])
+}
+
+model zenith_player_settings {
+  steam_id                     String    @id @db.VarChar(32)
+  name                         String?   @db.VarChar(64)
+  last_online                  DateTime? @default(now()) @db.Timestamp(0)
+  K4_Zenith_TimeStats_settings String?   @map("K4-Zenith-TimeStats.settings") @db.LongText
+  K4_Zenith_Ranks_settings     String?   @map("K4-Zenith-Ranks.settings") @db.LongText
+  K4_Zenith_settings           String?   @map("K4-Zenith.settings") @db.LongText
+}
+
+model zenith_player_storage {
+  steam_id                    String    @id @db.VarChar(32)
+  name                        String?   @db.VarChar(64)
+  last_online                 DateTime? @default(now()) @db.Timestamp(0)
+  K4_Zenith_TimeStats_storage String?   @map("K4-Zenith-TimeStats.storage") @db.LongText
+  K4_Zenith_Ranks_storage     String?   @map("K4-Zenith-Ranks.storage") @db.LongText
+  K4_Zenith_Stats_storage     String?   @map("K4-Zenith-Stats.storage") @db.LongText
+}
+
+model zenith_weapon_stats {
+  steam_id       String @db.VarChar(32)
+  weapon         String @db.VarChar(64)
+  kills          Int    @default(0)
+  shots          Int    @default(0)
+  hits           Int    @default(0)
+  headshots      Int    @default(0)
+  head_hits      Int    @default(0)
+  chest_hits     Int    @default(0)
+  stomach_hits   Int    @default(0)
+  left_arm_hits  Int    @default(0)
+  right_arm_hits Int    @default(0)
+  left_leg_hits  Int    @default(0)
+  right_leg_hits Int    @default(0)
+  neck_hits      Int    @default(0)
+  gear_hits      Int    @default(0)
+
+  @@id([steam_id, weapon])
+}

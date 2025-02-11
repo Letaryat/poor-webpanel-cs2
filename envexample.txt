@@ -1,0 +1,7 @@
+
+ZENITH_DATABASE='{
+    "0": { "name": "Arena", "url": "mysql://username:@host:port/database" },
+    "1": { "name": "Mirage", "url": "mysql://username:@host:port/database" }
+}'
+
+STEAM_API_KEY = ""
