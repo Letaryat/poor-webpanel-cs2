@@ -45,4 +45,4 @@ next-env.d.ts
 src/app/test
 src/app/zenith/stare
 src/app/api/playerslist/kopia
-
+agentbackup/

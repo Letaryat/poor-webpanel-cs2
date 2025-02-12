@@ -9,6 +9,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import {AgentStats} from "./agentstats";
 
 const databases = JSON.parse(process.env.ZENITH_DATABASE || "{}");
 
@@ -45,14 +46,20 @@ export async function WeaponFavStats({ id, sid }) {
                     <h3 className="font-semibold text-2xl uppercase">{weaponStats[0].weapon}</h3>
                     <Image className="rounded-xl" src={"/weapons/ak47.webp"} width={200} height={200} alt="pfp" />
                 </div>
-                <div>
-                    <ul>
-                        <li>Kills: {weaponStats[0].kills}</li>
-                        <li>Shots: {weaponStats[0].shots}</li>
-                        <li>HS: {weaponStats[0].headshots}</li>
-                        <li>Chest:{weaponStats[0].chest_hits}</li>
-                        <li>Stomach: {weaponStats[0].stomach_hits}</li>
+                <div className="grid grid-cols-2 gap-2 justify-center items-center">
+                    <ul className="flex flex-col gap-2">
+                        <li >
+                        <p className="text-lg">Kills</p>
+                        <h3 className="text-5xl font-bold">{weaponStats[0].kills}</h3>
+                        </li>
+                        <li >
+                        <p className="text-lg">Shots</p>
+                        <h3 className="text-5xl font-bold">{weaponStats[0].shots}</h3>
+                        </li>
+
                     </ul>
+
+                    <AgentStats weaponStats={weaponStats} shoot={weaponStats[0].shots}/>
                 </div>
             </div>
         </div>
