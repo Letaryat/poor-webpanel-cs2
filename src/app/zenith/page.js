@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PlayerListRow } from "@/components/players/playerslist";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import PlayerSearch from "./search";
 
 export default function ZenithRanking() {
@@ -66,7 +66,7 @@ export default function ZenithRanking() {
                     <div className="flex gap-2 mb-2">
                     {numDB && numDB.length > 0 ? (
                         numDB.map((db, i) => (
-                            <Button className={`${clickedServer == db.id ? "bg-blue-500 text-white" : ""} `}
+                            <Button variant="secondary" className={`${clickedServer == db.id ? "bg-blue-500 text-white" : ""} `}
                             key={i}
                             onClick={() => {
                                 setClickedServer(db.id);
@@ -83,7 +83,7 @@ export default function ZenithRanking() {
                     <PlayerSearch serverid={clickedServer}/>
                 </div>
                 <div className="h-[750px]">
-                    <div className="grid grid-cols-4 p-2 border border-neutral-800 mb-2">
+                    <div className="grid grid-cols-4 p-2 border border-neutral-800 mb-2 rounded-md bg-neutral-900 border border-neutral-800">
                         <div>Position</div>
                         <div>Nickname</div>
                         <div>Points</div>

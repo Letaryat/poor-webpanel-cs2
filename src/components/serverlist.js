@@ -112,7 +112,7 @@ export function ServerList() {
                                                     ))}
                                                 </div>
                                             ) : (
-                                                <div>No players found</div>
+                                                <div className="h-[275px]">No players found</div>
                                             )}
 
                                             <div className="flex justify-center gap-2 text-center">

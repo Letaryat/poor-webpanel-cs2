@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MainPlayerStats from "./mainstats";
 import FetchSteamPlayerInfo from "@/app/api/steamprofile/route";
-
+import PlayerServers from "./playerservers";
 const databases = JSON.parse(process.env.ZENITH_DATABASE || "{}");
 
 export default async function PlayerProfile({ params, searchParams }) {
@@ -36,6 +36,7 @@ export default async function PlayerProfile({ params, searchParams }) {
     return (
         <div className="flex justify-center">
             <main className="container">
+                <PlayerServers sid={id} serverid={serverid["server"]}/>
                 <div className="ProfileHeader relative rounded-md" style={{
                     width: "100%",
                 }}>

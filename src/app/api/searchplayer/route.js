@@ -8,6 +8,7 @@ export async function GET(req) {
     try {
         const { searchParams } = new URL(req.url);
         const search = searchParams.get("player") || "";
+        const server = searchParams.get("server") || 0;
         if(search == ""){
             return new Response(JSON.stringify({
                 players: "Brak graczy"
@@ -18,7 +19,7 @@ export async function GET(req) {
         }
         const prisma = new PrismaClient({
             datasources: {
-                db: { url: databases[0]["url"] }
+                db: { url: databases[server]["url"] }
             }
         })
         const players = await prisma.$queryRaw`

@@ -2,11 +2,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export function PlayerListRow({ position, nickname, points, rank, avatar }) {
     return (
-        <div className={`grid grid-cols-4 p-2 border border-neutral-800 mb-2 items-center bg-neutral-900 rounded-md 
+        <div className={`grid grid-cols-4 relative p-2 border border-neutral-800 mb-1 items-center bg-neutral-900 rounded-md transition ease-in-out hover:-translate-y-1
         ${position == "1" ? "First" : ""}
         ${position == "2" ? "Second" : ""}
         ${position == "3" ? "Third" : ""}
-        `}
+        playerlistrow`}
         >
             <div>{position}.</div>
             <div className="flex gap-6 items-center">

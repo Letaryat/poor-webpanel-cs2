@@ -37,6 +37,8 @@ export async function GET() {
                         host: server.host,
                         port: server.port,
                         givenPortOnly: true,
+                        maxRetries: 3,
+                        socketTimeout: 3000,
                     });
                     return { ...server, state };
                 } catch (error) {

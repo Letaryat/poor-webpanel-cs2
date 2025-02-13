@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button";
+import { Search } from 'lucide-react';
 export default function PlayerSearch( { serverid } ) {
     const [open, setOpen] = useState(false);
     const [text, setText] = useState("");
@@ -42,7 +43,7 @@ export default function PlayerSearch( { serverid } ) {
         setLoading(true);
         setError("");
         try {
-            const response = await fetch(`/api/searchplayer?player=${text}`);
+            const response = await fetch(`/api/searchplayer?player=${text}&server=${serverid}`);
             const data = await response.json();
             if (data.players === "Brak graczy") {
                 setPlayers([]);
@@ -61,7 +62,7 @@ export default function PlayerSearch( { serverid } ) {
     return (
         <div>
             <Dialog>
-                <DialogTrigger> <div className="bg-green-400 flex justify-center items-center p-2 rounded-md">Search</div> </DialogTrigger>
+                <DialogTrigger> <div className="bg-blue-500 flex justify-center items-center max-h-[36px] p-2 rounded-md"> <Search style={{translateX: "180deg"}}/> Search</div> </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Search for a player using nickname or steamid64</DialogTitle>
