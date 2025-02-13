@@ -82,7 +82,7 @@ export default function ZenithRanking() {
                     </div>
                     <PlayerSearch serverid={clickedServer}/>
                 </div>
-                <div className="h-[750px]">
+                <div className="h-[670px]">
                     <div className="grid grid-cols-4 p-2 border border-neutral-800 mb-2 rounded-md bg-neutral-900">
                         <div>Position</div>
                         <div>Nickname</div>
@@ -103,6 +103,14 @@ export default function ZenithRanking() {
                 </div>
 
                 <div className="flex justify-between mt-4">
+                <div className="flex gap-1">
+                <button
+                        onClick={() => {setCurrentPage(1)}}
+                        className="px-4 py-2 bg-neutral-900 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={currentPage === 1}
+                    >
+                        First
+                    </button>
                     <button
                         onClick={prevPage}
                         disabled={currentPage === 1}
@@ -110,6 +118,8 @@ export default function ZenithRanking() {
                     >
                         Previous
                     </button>
+                </div>
+
                     <div className="flex gap-2">
                         {pagesToShow.map((page) => (
                             <button
@@ -121,6 +131,7 @@ export default function ZenithRanking() {
                             </button>
                         ))}
                     </div>
+                    <div className="flex gap-1">
                     <button
                         onClick={nextPage}
                         className="px-4 py-2 bg-neutral-900 rounded disabled:opacity-50 disabled:cursor-not-allowed"
@@ -128,6 +139,15 @@ export default function ZenithRanking() {
                     >
                         Next
                     </button>
+                    <button
+                        onClick={() => {setCurrentPage(totalPages)}}
+                        className="px-4 py-2 bg-neutral-900 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={(currentPage * playersPerPage) >= totalPlayers}
+                    >
+                        Last
+                    </button>
+                    </div>
+
                 </div>
             </main>
         </div>

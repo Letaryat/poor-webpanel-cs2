@@ -1,13 +1,18 @@
+'use client'
 import Link from "next/link"
-export function Header()
-{
-    return(
+import { usePathname } from "next/navigation";
+import { CustomURLS } from "./customurls";
+export function Header() {
+    const path = usePathname();
+    let patharray = path.split("/").filter((path) => path);
+    const pathNow = patharray[patharray.length - 1];
+    return (
         <header className="flex justify-center h-14 border-b border-b-neutral-800 mb-2">
-        <div className="container flex items-center border border-neutral-800 border-b-0 border-t-0 pl-2 pr-2 gap-2">
-            <Link href={"/"}><h1 className="text-base font-semibold">UwURanking</h1>
-            </Link>
-            <Link href={"/zenith"}>Ranking</Link>
-        </div>
+            <div className="container flex items-center border border-neutral-800 border-b-0 border-t-0 pl-2 pr-2 gap-2">
+                <Link href={"/"}><h1 className="text-base font-semibold">Website Name</h1></Link>
+                <Link className={`hover:bg-neutral-800 p-2 rounded-md ${path.startsWith(`/zenith`) ? "bg-neutral-800" : ""}`} href={"/zenith"}>Zenith ranking</Link>  
+                <CustomURLS/>
+            </div>
         </header>
     )
 }

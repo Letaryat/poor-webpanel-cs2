@@ -4,4 +4,6 @@ ZENITH_DATABASE='{
     "1": { "name": "Mirage", "url": "mysql://username:@host:port/database" }
 }'
 
+NEXT_PUBLIC_CUSTOMURL='{"Discord": "url", "Steam Group": "url"}'
+
 STEAM_API_KEY = ""
