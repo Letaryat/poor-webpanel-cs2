@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import FetchSteamPlayerInfo from "../steamprofile/route";
-
+import {AvatarSaverForTable} from "../avatar/saveavatar/route";
 const databases = JSON.parse(process.env.ZENITH_DATABASE || "{}");
 
 //const prisma = new PrismaClient();
@@ -33,16 +33,25 @@ export async function GET(req) {
                 steam_id, 
                 name, 
                 last_online, 
-                \`K4-Zenith-TimeStats.storage\`, 
-                \`K4-Zenith-Ranks.storage\`,
-                \`K4-Zenith-Stats.storage\`,
                 JSON_UNQUOTE(JSON_EXTRACT(\`K4-Zenith-Ranks.storage\`, '$.Points')) AS points,
-                JSON_UNQUOTE(JSON_EXTRACT(\`K4-Zenith-Ranks.storage\`, '$.Rank')) AS rank
+                JSON_UNQUOTE(JSON_EXTRACT(\`K4-Zenith-Ranks.storage\`, '$.Rank')) AS rank,
+                JSON_UNQUOTE(JSON_EXTRACT(\`K4-Zenith-Stats.storage\`, '$.Kills')) AS kills,
+                JSON_UNQUOTE(JSON_EXTRACT(\`K4-Zenith-Stats.storage\`, '$.Deaths')) AS deaths,
+                JSON_UNQUOTE(JSON_EXTRACT(\`K4-Zenith-TimeStats.storage\`, '$.TotalPlaytime')) AS time
             FROM zenith_player_storage
             ORDER BY CAST(points AS UNSIGNED) DESC
             LIMIT ${limit} OFFSET ${offset};
         `;
 
+        const playersWithAvatars = await Promise.all(players.map(async (player) => {
+            try {
+                await AvatarSaverForTable(player.steam_id);
+            } catch (error) {
+                console.error(`Błąd pobierania awatara dla ${player.steam_id}:`, error);
+            }
+        }));
+
+        /*
         const playersWithAvatars = await Promise.all(players.map(async (player) => {
             try {
                 const steamProfile = await FetchSteamPlayerInfo(player.steam_id);
@@ -55,7 +64,7 @@ export async function GET(req) {
                 return { ...player, avatar: "avatars/1.jpg" }; 
             }
         }));
-
+        */
         const totalPlayersResult = await prisma.$queryRaw`
             SELECT COUNT(*) as total FROM zenith_player_storage;
         `;
@@ -63,7 +72,7 @@ export async function GET(req) {
         const totalPlayers = Number(totalPlayersResult[0].total);
 
         return new Response(JSON.stringify({
-            players: playersWithAvatars,
+            players: players,
             total: totalPlayers, 
             page,
             limit

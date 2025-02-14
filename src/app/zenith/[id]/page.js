@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MainPlayerStats from "./mainstats";
 import FetchSteamPlayerInfo from "@/app/api/steamprofile/route";
 import PlayerServers from "./playerservers";
+import {IfTheSame} from "@/app/api/avatar/saveavatar/route";
 const databases = JSON.parse(process.env.ZENITH_DATABASE || "{}");
 
 export default async function PlayerProfile({ params, searchParams }) {
@@ -33,6 +34,9 @@ export default async function PlayerProfile({ params, searchParams }) {
     let PlayerSteamData = await FetchSteamPlayerInfo(player.steam_id);
     await prisma.$disconnect();
 
+    await IfTheSame(id, PlayerSteamData.avatarfull);
+    //await SteamAvatarSaver(id);
+
     return (
         <div className="flex justify-center">
             <main className="container">
@@ -42,7 +46,7 @@ export default async function PlayerProfile({ params, searchParams }) {
                 }}>
                     <div className="ProfileBackgroundImage rounded-md"
                         style={{
-                            backgroundImage: `linear-gradient(to bottom, rgba(24, 25, 26, 0.52), rgba(0, 0, 0, 0.73)), url(https://rank.pierdolnik.eu/storage/cache/img/maps/730/de_mirage.jpg)`,
+                            backgroundImage: `linear-gradient(to bottom, rgba(24, 25, 26, 0.52), rgba(0, 0, 0, 0.73)), url(https://images8.alphacoders.com/132/1329760.jpeg)`,
                             backgroundSize: 'cover',
                             backgroundPosition: "50% 50%",
                             width: "100%",

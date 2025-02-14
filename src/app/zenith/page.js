@@ -6,6 +6,8 @@ import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import PlayerSearch from "./search";
 
+
+
 export default function ZenithRanking() {
     const [playersData, setPlayersData] = useState([]);
     const [totalPlayers, setTotalPlayers] = useState(null);
@@ -49,19 +51,19 @@ export default function ZenithRanking() {
 
     if (loading) {
         return (
-            <div className="grid justify-center items-center">
-                <main className="flex flex-col w-[960px] text-center">
+            <div className="flex justify-center ">
+                <main className="flex flex-col container text-center">
                     {[...Array(playersPerPage)].map((_, i) => (
-                        <Skeleton key={i} className="grid grid-cols-4 p-2 border border-neutral-800 mb-2 h-[42px]" />
+                        <Skeleton key={i} className="grid grid-cols-4 p-2 border border-neutral-800 mb-2 h-[58px]" />
                     ))}
                 </main>
             </div>
         );
     }
-
+    
     return (
-        <div className="grid justify-center items-center">
-            <main className="flex flex-col w-[960px]  text-center">
+        <div className="flex justify-center">
+            <main className="relative flex flex-col text-center container">
                 <div className="flex justify-between">
                     <div className="flex gap-2 mb-2">
                     {numDB && numDB.length > 0 ? (
@@ -82,21 +84,29 @@ export default function ZenithRanking() {
                     </div>
                     <PlayerSearch serverid={clickedServer}/>
                 </div>
-                <div className="h-[670px]">
-                    <div className="grid grid-cols-4 p-2 border border-neutral-800 mb-2 rounded-md bg-neutral-900">
+                <div className="h-[680px]">
+                    <div className="grid grid-cols-8 p-2 border border-neutral-800 mb-2 rounded-md bg-neutral-900">
                         <div>Position</div>
                         <div>Nickname</div>
                         <div>Points</div>
                         <div>Rank</div>
+                        <div>Kills</div>
+                        <div>Deaths</div>
+                        <div>KD</div>
+                        <div>Time</div>
                     </div>
                     {playersData.map((player, i) => (
                         <Link href={`/zenith/${player.steam_id}?server=${clickedServer}`} key={i}>
                             <PlayerListRow
                                 position={(currentPage - 1) * playersPerPage + i + 1}
-                                avatar={player.avatar}
+                                avatar={`/api/avatar/ifexist/${player.steam_id}`}
                                 nickname={player.name}
                                 points={player.points}
                                 rank={player.rank.split('.')[3]}
+                                kills={player.kills}
+                                deaths={player.deaths}
+                                kd={(player.kills / player.deaths).toFixed(2)}
+                                time={player.time}
                             />
                         </Link>
                     ))}
@@ -147,7 +157,6 @@ export default function ZenithRanking() {
                         Last
                     </button>
                     </div>
-
                 </div>
             </main>
         </div>
