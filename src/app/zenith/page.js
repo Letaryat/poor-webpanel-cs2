@@ -112,7 +112,7 @@ export default function ZenithRanking() {
                     ))}
                 </div>
 
-                <div className="flex justify-between mt-4">
+                <div className="flex justify-center gap-8 mt-4">
                 <div className="flex gap-1">
                 <button
                         onClick={() => {setCurrentPage(1)}}
