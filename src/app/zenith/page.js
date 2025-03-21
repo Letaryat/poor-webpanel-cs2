@@ -144,7 +144,6 @@ export default function ZenithRanking() {
                     playersData.length === 0 ? (
                         <div className="flex flex-col border border-red-400 rounded-md p-4">
                             <p>No players on this page!</p>
-                            <p>How did you even found this huh!?</p>
                         </div>
                     ) :
                     
