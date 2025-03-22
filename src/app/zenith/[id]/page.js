@@ -4,7 +4,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MainPlayerStats from "./mainstats";
 import FetchSteamPlayerInfo from "@/app/api/steamprofile/route";
 import PlayerServers from "./playerservers";
-import {IfTheSame} from "@/app/api/avatar/saveavatar/route";
+import { IfTheSame } from "@/app/api/avatar/saveavatar/route";
+import { StylePoints, CalculateBackground, CalculateColor, ShortNickname } from '@/lib/playerfunctions' 
+
 const databases = JSON.parse(process.env.ZENITH_DATABASE || "{}");
 
 export default async function PlayerProfile({ params, searchParams }) {
@@ -40,7 +42,7 @@ export default async function PlayerProfile({ params, searchParams }) {
     return (
         <div className="flex justify-center">
             <main className="container">
-                <PlayerServers sid={id} serverid={serverid["server"]}/>
+                <PlayerServers sid={id} serverid={serverid["server"]} />
                 <div className="ProfileHeader relative rounded-md" style={{
                     width: "100%",
                 }}>
@@ -60,8 +62,21 @@ export default async function PlayerProfile({ params, searchParams }) {
                         <Image className="rounded-xl" src={PlayerSteamData.avatarfull} width={120} height={120} alt="pfp" unoptimized />
                         <div className="flex flex-col ml-3">
                             <h1 className="font-bold text-2xl">{player.name}</h1>
-                            <p>{lastOnlineFormatted}</p>
-                            {ranks?.Points ?? "0"} - {ranks?.Rank?.split('.')[3] ?? "Unknown"}
+                            <p>Last online: {lastOnlineFormatted}</p>
+                            <div className="flex mt-2 ml-2 items-center">
+                                <div>
+                                    <div className="flex justify-center mr-3 items-center h-[100%]">
+                                        <div className=" absolute">
+                                            {CalculateBackground(ranks?.Points)}
+                                        </div>
+                                         {StylePoints(ranks?.Points)}
+                                    </div>
+                                </div>
+                                <div>
+                                    - {ranks.Rank}
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
