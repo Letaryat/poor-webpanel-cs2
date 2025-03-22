@@ -61,7 +61,7 @@ export default async function PlayerProfile({ params, searchParams }) {
                         <div className="flex flex-col ml-3">
                             <h1 className="font-bold text-2xl">{player.name}</h1>
                             <p>{lastOnlineFormatted}</p>
-                            <p>{ranks.Points} - {ranks.Rank.split('.')[3]}</p>
+                            {ranks?.Points ?? "0"} - {ranks?.Rank?.split('.')[3] ?? "Unknown"}
                         </div>
                     </div>
                 </div>

@@ -85,19 +85,19 @@ export default async function MainPlayerStats({ id, sid }) {
                 <div className="relative overflow-hidden border border-neutral-800 bg-neutral-900 p-2 text-center rounded-md flex justify-center items-center" >
                     <div className="flex flex-col">
                         <p className="text-xl">Kills</p>
-                        <h3 className="text-5xl font-bold">{stats.Kills}</h3>
+                        <h3 className="text-5xl font-bold">{stats?.Kills ?? "0"}</h3>
                     </div>
                 </div>
                 <div className="relative overflow-hidden border border-neutral-800 bg-neutral-900 p-2 text-center rounded-md flex justify-center items-center">
                     <div className="flex flex-col">
                         <p className="text-xl">Deaths</p>
-                        <h3 className="text-5xl font-bold">{stats.Deaths}</h3>
+                        <h3 className="text-5xl font-bold">{stats?.Deaths ?? "0"}</h3>
                     </div>
                 </div>
                 <div className="relative overflow-hidden border border-neutral-800 bg-neutral-900 p-2 text-center rounded-md flex justify-center items-center">
                     <div className="flex flex-col">
                         <p className="text-xl">Assists</p>
-                        <h3 className="text-5xl font-bold">{stats.Assists}</h3>
+                        <h3 className="text-5xl font-bold">{stats?.Assists ?? "0"}</h3>
                     </div>
                 </div>
 
@@ -108,7 +108,7 @@ export default async function MainPlayerStats({ id, sid }) {
                 <div className="col-span-2 row-span-2 col-start-4 row-start-1 relative overflow-hidden border border-neutral-800 bg-neutral-900 p-2 text-center rounded-md flex flex-col justify-center items-center">
                     <h4 className="text-xl font-bold">Player playtime</h4>
                     <div className="h-[225px] w-[225px]">
-                        <PlayerTimeChart tt={timeStats.TerroristPlaytime} ct={timeStats.CounterTerroristPlaytime} spec={timeStats.SpectatorPlaytime}/>
+                        <PlayerTimeChart tt={timeStats?.TerroristPlaytime ?? "0"} ct={timeStats?.CounterTerroristPlaytime ?? "0"} spec={timeStats?.SpectatorPlaytime ?? "0"}/>
                     </div>
                 </div>
 

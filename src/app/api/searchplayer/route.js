@@ -27,7 +27,7 @@ export async function GET(req) {
             FROM zenith_player_storage
             WHERE name LIKE ${`%${search}%`} OR steam_id LIKE ${`%${search}%`};
         `;
-
+        /*
         const playersWithAvatars = await Promise.all(players.map(async (player) => {
             try {
                 const steamProfile = await FetchSteamPlayerInfo(player.steam_id);
@@ -39,9 +39,9 @@ export async function GET(req) {
                 return { ...player, avatar: null }; 
             }
         }));
-
+        */
         return new Response(JSON.stringify({
-            players: playersWithAvatars
+            players: players
         }), {
             status: 200,
             headers: { "Content-Type": "application/json" } 

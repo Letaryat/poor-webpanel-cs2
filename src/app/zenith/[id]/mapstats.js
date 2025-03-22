@@ -125,8 +125,16 @@ export async function MapStats({ id, sid }) {
             </TableHeader>
             <TableBody>
                 {mapStats.map((map) => (
-                    <TableRow key={map.map_name}>
-                        <TableCell >{map.map_name}</TableCell>
+                    <TableRow className="rounded-md p-2" key={map.map_name} style={{
+                                        backgroundImage: `linear-gradient(to bottom, rgba(24, 25, 26, 0.52), rgba(0, 0, 0, 0.73)), linear-gradient(to top, rgba(24, 25, 26, 0.52), rgba(0, 0, 0, 0.73)), url(https://rank.pierdolnik.eu/storage/cache/img/maps/730/${map.map_name}.jpg)`,
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: "50% 50%",
+                                        width: "100%",
+                                        height: "100%",
+                                        borderRadius: "100px",
+
+                    }}>
+                        <TableCell className="font-semibold">{map.map_name}</TableCell>
                         <TableCell>{map.mvp}</TableCell>
                         <TableCell>{map.round_win}</TableCell>
                         <TableCell>{map.round_lose}</TableCell>

@@ -117,6 +117,29 @@ background: linear-gradient(150deg, rgba(255,207,0,0.29313732328869047) 0%, rgba
     background: linear-gradient(150deg, rgba(150, 86, 2,0.29313732328869047) 0%, rgba(255,255,255,0) 35%); 
   }
 
+
+.premier_grey{
+    color:#b0c3d9;
+}
+.premier_cyan{
+    color:#b0c3d9;
+}
+.premier_blue{
+    color:#6a7dff;
+}
+.premier_purple{
+    color:#c166ff;
+}
+.premier_pink{
+    color:#f03cff;
+}
+.premier_red{
+    color:#eb4b4b;
+}
+.premier_gold{
+    color: gold;
+}
+
   /*
 .playerlistrow:after{
   content: "";

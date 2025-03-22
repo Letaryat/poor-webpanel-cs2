@@ -79,7 +79,7 @@ export default function PlayerSearch( { serverid } ) {
                         {players.map((player) => (
                             <Link key={player.steam_id} href={`/zenith/${player.steam_id}?server=${serverid}`} className="flex border border-neutral-900 p-2 rounded-md mb-1 gap-2 items-center">
                                 <Avatar>
-                                    <AvatarImage src={player.avatar === "null" ? "" : player.avatar} />
+                                    <AvatarImage src={`/api/avatar/ifexist/${player.steam_id}`} />
                                     <AvatarFallback>{player.name}</AvatarFallback>
                                 </Avatar>
                                 {player.name}
