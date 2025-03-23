@@ -7,40 +7,33 @@ import PlayerServers from "./playerservers";
 import { IfTheSame } from "@/app/api/avatar/saveavatar/route";
 import { StylePoints, CalculateBackground, CalculateColor, ShortNickname } from '@/lib/playerfunctions' 
 
-import { redirect } from "next/navigation";
-
 const databases = JSON.parse(process.env.ZENITH_DATABASE || "{}");
 
 export default async function PlayerProfile({ params, searchParams }) {
     const { id } = await params;
-    const serverid = await searchParams;
+    const serverid = await searchParams || null;
 
-    let prisma;
-    try{
-        prisma = new PrismaClient({
-            datasources: {
-                db: { url: databases[serverid["server"]]["url"] }
-            }
-        })
+    if (!serverid ) {
+        console.log("Niepoprawny serverid lub brak wpisu w databases");
+        return <div className="text-red-500 text-center">Nie znaleziono serwera lub ID jest niepoprawne.</div>;
     }
-    catch(error)
-    {
-        console.log(error);
-        redirect(`/zenith/error`);
-    }
+
+    //console.log(serverid["server"]);
+    let prisma = new PrismaClient({
+        datasources: {
+            db: { url: databases[serverid["server"]]["url"] }
+        }
+    })
 
     const player = await prisma.zenith_player_storage.findUnique({
         where: {
             steam_id: id,
         },
     });
-
     if (!player) {
         return <div>Gracza nie ma</div>
     }
 
-
-    
     const lastOnlineFormatted = player.last_online.toLocaleString();
     const timeStats = JSON.parse(player.K4_Zenith_TimeStats_storage);
     const ranks = JSON.parse(player.K4_Zenith_Ranks_storage);
