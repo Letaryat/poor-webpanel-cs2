@@ -42,7 +42,7 @@ export async function GET(req) {
             ORDER BY CAST(points AS UNSIGNED) DESC
             LIMIT ${limit} OFFSET ${offset};
         `;
-
+        /*
         const playersWithAvatars = await Promise.all(players.map(async (player) => {
             try {
                 await AvatarSaverForTable(player.steam_id);
@@ -51,7 +51,7 @@ export async function GET(req) {
             }
         }));
 
-        /*
+
         const playersWithAvatars = await Promise.all(players.map(async (player) => {
             try {
                 const steamProfile = await FetchSteamPlayerInfo(player.steam_id);

@@ -1,0 +1,27 @@
+.AccordionContent {
+    overflow: hidden;
+  }
+  .AccordionContent[data-state="open"] {
+    animation: slideDown 50ms ease-out;
+  }
+  .AccordionContent[data-state="closed"] {
+    animation: slideUp 50ms ease-out;
+  }
+  
+  @keyframes slideDown {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  
+  @keyframes slideUp {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }  

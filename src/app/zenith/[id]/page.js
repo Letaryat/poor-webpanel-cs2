@@ -73,7 +73,8 @@ export default async function PlayerProfile({ params, searchParams }) {
                                     </div>
                                 </div>
                                 <div>
-                                    - {ranks.Rank}
+                                    - {ranks?.Rank.includes("k4.phrases.rank") ? ranks?.Rank.split('.')[3] : ranks?.Rank}
+
                                 </div>
                             </div>
 

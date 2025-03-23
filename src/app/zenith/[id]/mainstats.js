@@ -108,7 +108,7 @@ export default async function MainPlayerStats({ id, sid }) {
                 <div className="col-span-2 row-span-2 col-start-4 row-start-1 relative overflow-hidden border border-neutral-800 bg-neutral-900 p-2 text-center rounded-md flex flex-col justify-center items-center">
                     <h4 className="text-xl font-bold">Playtime - {(timeStats.TotalPlaytime / 60).toFixed(2)} hr.</h4>
                     <div className="h-[225px] w-[225px]">
-                        <PlayerTimeChart tt={timeStats?.TerroristPlaytime ?? "0"} ct={timeStats?.CounterTerroristPlaytime ?? "0"} spec={timeStats?.SpectatorPlaytime ?? "0"}/>
+                        <PlayerTimeChart tt={(timeStats?.TerroristPlaytime / 60).toFixed(2) ?? "0"} ct={(timeStats?.CounterTerroristPlaytime / 60).toFixed(2) ?? "0"} spec={(timeStats?.SpectatorPlaytime / 60).toFixed(2) ?? "0"}/>
                     </div>
                 </div>
 

@@ -4,8 +4,10 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url      = env("ZENITH_DATABASE")
 }
+
+
 
 model zenith_map_stats {
   steam_id        String @db.VarChar(32)

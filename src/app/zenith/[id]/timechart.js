@@ -11,7 +11,7 @@ export default function PlayerTimeChart({ tt, ct, spec })
         labels: ['Terrorist', 'CT', 'Spectator'],
         datasets: [
           {
-            label: 'Minutes',
+            label: 'Hours',
             data: [tt, ct, spec],
             backgroundColor: [
               'rgba(255, 182, 73, 0.2)',
