@@ -1,10 +1,18 @@
 import fs from 'fs';
+import { AvatarSaverForTable } from "@/app/api/avatar/saveavatar/route";
+
 export async function GET(request, { params }) {
     const { id } = await params;
     const path = 'public/cache/avatar/';
     let userid = id;
     let imageBuffer;
     if(!fs.existsSync(`public/cache/avatar/${userid}.jpg`)) { 
+        try{
+            AvatarSaverForTable(userid)
+        }
+        catch(error){
+            console.log(error);
+        }
         userid = "default";
     }
     imageBuffer = fs.readFileSync(`${path}/${userid}.jpg`);

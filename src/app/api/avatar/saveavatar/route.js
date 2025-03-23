@@ -2,7 +2,7 @@ import fs from 'fs';
 import fetch from 'node-fetch';
 const savePath = 'public/cache/avatar';
 
-async function DownloadSteamPFP(avatarResponse, savePath, sid){
+export async function DownloadSteamPFP(avatarResponse, savePath, sid){
   console.log("Unloko, profile picture has to be downloaded");
   const writer = fs.createWriteStream(`${savePath}/${sid}.jpg`);
   await new Promise((resolve, reject) => {
@@ -14,6 +14,7 @@ async function DownloadSteamPFP(avatarResponse, savePath, sid){
 
 export async function IfTheSame(sid, avatar)
 {
+  console.log('1');
   if(fs.existsSync(`${savePath}/${sid}.jpg`)){
     var avatarfetch = await fetch(avatar);
     var avatarfetch2 = await fetch(avatar);
@@ -32,6 +33,13 @@ export async function IfTheSame(sid, avatar)
       DownloadSteamPFP(avatarfetch2, savePath, sid);
     },1000)
     return;
+  }
+  else{
+    var avatarfetch = await fetch(avatar);
+    var avatar2 = avatarfetch;
+    setTimeout(()=>{
+      DownloadSteamPFP(avatar2, savePath, sid);
+    },1000)
   }
 }
 

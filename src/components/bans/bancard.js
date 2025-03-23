@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { SquareArrowOutUpRight } from 'lucide-react';
 import Link from "next/link";
 
-function durationChange(value) {
+function durationChange(value, status) {
     if (value == 0) {
         return (
             <span className="bg-red-400 bg-opacity-20 text-xs font-base text-red-400 p-2 rounded-2xl flex justify-center">
@@ -17,11 +17,22 @@ function durationChange(value) {
         )
     }
     else {
-        return (
-            <span className="bg-orange-400 bg-opacity-20 text-xs font-base text-orange-400 p-2 rounded-2xl flex justify-center">
-                FOREVER
-            </span>
-        )
+        if(status === "EXPIRED")
+        {
+            return (
+                <span className="bg-green-400 bg-opacity-20 text-xs font-base text-green-400 p-2 rounded-2xl flex justify-center">
+                    EXPIRED :)
+                </span>
+            )
+        }
+        else{
+            return (
+                <span className="bg-orange-400 bg-opacity-20 text-xs font-base text-orange-400 p-2 rounded-2xl flex justify-center">
+                    {value}
+                </span>
+            )
+        }
+
     }
 }
 
@@ -37,12 +48,13 @@ export function BanCard({ id, pname, psid, asid, aname, reason, duration, end, c
                                 <AvatarFallback>{pname}</AvatarFallback>
                             </Avatar>
                             <h2 className="font-bold text-lg">{pname}</h2>
+                            
                         </div>
 
                         <p>{created}</p>
                     </div>
                     <div className="flex justify-center items-center ">
-                        {durationChange(duration)}
+                        {durationChange(duration, status)}
                     </div>
                 </div>
             </AccordionTrigger>
@@ -55,7 +67,9 @@ export function BanCard({ id, pname, psid, asid, aname, reason, duration, end, c
                     <div className="flex gap-2 flex-col">
                         <div className="h-[68px] flex flex-col justify-center">
                             <h4 className="font-black">Player Steamid64</h4>
-                            <p>{psid}</p>
+                            <Link target="_blank" className="hover:text-blue-400 transition-all ease-in-out" href={`https://steamcommunity.com/profiles/${psid}`}>
+                            <p className="flex  justify-center gap-1 items-center">{psid} <SquareArrowOutUpRight size={16} /></p>
+                            </Link>
                         </div>
                         <div>
                             <h4 className="font-black">Created</h4>
@@ -69,7 +83,7 @@ export function BanCard({ id, pname, psid, asid, aname, reason, duration, end, c
                     <div className="flex gap-2 flex-col">
                         <div className="flex justify-center items-center flex-col">
                             <h4 className="font-black">Admin</h4>
-                            <Link href={`/zenith/${asid}`}>
+                            <Link target="_blank" href={`/zenith/${asid}`}>
                             <div className="flex items-center gap-2 mt-2 hover:text-blue-400 transition-all ease-in-out">
                                 <Avatar >
                                     <AvatarImage src={`/api/avatar/ifexist/${asid}`} />

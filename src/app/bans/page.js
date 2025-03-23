@@ -12,6 +12,8 @@ import "./styles.css";
 import { Input } from "@/components/ui/input";
 export default function BansPage() {
     const [bans, setBans] = useState([]);
+    const [allbans, setAllBans] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
 
     const router = useRouter();
     const pathname = usePathname();
@@ -20,24 +22,56 @@ export default function BansPage() {
     const params = new URLSearchParams(searchParams.toString());
 
     useEffect(() => {
+        const paramsPage = Number(params.get("page")) || 1;
+        
+        setCurrentPage(paramsPage);
+
         async function fetchBans(page) {
             try {
                 const response = await fetch(`/api/simpleadmin/bans?page=${page}`)
                 const data = await response.json();
+                setAllBans(data.total)
                 setBans(data.bans || []);
             }
             catch (error) {
                 console.log(error);
             }
         }
-        fetchBans(1)
+        fetchBans(paramsPage)
     }, [searchParams])
 
+    useEffect(() => {
+        if (currentPage) {
+            paramPage(currentPage);
+        }
+    }, [currentPage]);
+
+    const nextPage = () => {
+        setCurrentPage(currentPage + 1);
+        paramPage(currentPage + 1);
+    }
+
+    const prevPage = () => {
+        const newPage = Math.max(currentPage - 1, 1);
+        setCurrentPage(newPage);
+        paramPage(newPage);
+    }
+
+    const paramPage = (value) => {
+        params.set("page", value);
+        router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    };
+
+    const totalPages = Math.ceil(allbans / 10) || 1;
+    const startPage = Math.max(1, Math.min(currentPage - 3, totalPages - 6));
+    const endPage = Math.min(totalPages, startPage + 6);
+    const pagesToShow = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
 
 
     return (
         <div className="flex justify-center">
-            <main className="relative flex container gap-2">
+            <main className="relative flex container gap-2 flex-col">
+                <div className="flex relative gap-2">
                 <div className="basis-1/4 p-2">
                     <div>
                         <h2 className="font-semibold text-base">Search using name or SteamID64</h2>
@@ -67,7 +101,67 @@ export default function BansPage() {
                         ))}
                     </Accordion>
                 </div>
+                </div>
+
+                <div className="flex justify-center gap-8 mt-4">
+                    <div className="flex gap-1">
+                        <button
+                            onClick={() => { 
+                                setCurrentPage(1)
+                                paramPage(1)
+                             }}
+                            className="px-4 py-2 bg-neutral-900 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={currentPage === 1}
+                        >
+                            First
+                        </button>
+                        <button
+                            onClick={prevPage}
+                            disabled={currentPage === 1}
+                            className="px-4 py-2 bg-neutral-900 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Previous
+                        </button>
+                    </div>
+
+                    <div className="flex gap-2">
+                        {pagesToShow.map((page) => (
+                            <button
+                                key={page}
+                                onClick={() => {
+                                    setCurrentPage(page)
+                                    paramPage(page)
+                                }
+                                }
+                                className={`px-3 py-1 rounded ${Number(currentPage) === page ? 'bg-blue-500' : 'bg-neutral-800'}`}
+                            >
+                                {page}
+                            </button>
+                        ))}
+                    </div>
+                    <div className="flex gap-1">
+                        <button
+                            onClick={nextPage}
+                            className="px-4 py-2 bg-neutral-900 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={(currentPage * 10) >= allbans}
+                        >
+                            Next
+                        </button>
+                        <button
+                            onClick={() => { 
+                                setCurrentPage(totalPages);
+                                paramPage(totalPages);
+                            }}
+                            className="px-4 py-2 bg-neutral-900 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={(currentPage * 10) >= allbans}
+                        >
+                            Last
+                        </button>
+                    </div>
+                </div>
+                
             </main>
+
         </div>
 
 

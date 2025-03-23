@@ -36,7 +36,7 @@ export default async function PlayerProfile({ params, searchParams }) {
     let PlayerSteamData = await FetchSteamPlayerInfo(player.steam_id);
     await prisma.$disconnect();
 
-    await IfTheSame(id, PlayerSteamData.avatarfull);
+    await IfTheSame(id, PlayerSteamData.avatarmedium);
     //await SteamAvatarSaver(id);
 
     return (
