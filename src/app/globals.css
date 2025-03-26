@@ -104,17 +104,17 @@ body {
 
 .First{
 border: 1px solid rgba(255, 208, 0, 0.39);
-background: linear-gradient(150deg, rgba(255,207,0,0.29313732328869047) 0%, rgba(255,255,255,0) 35%); 
+background: linear-gradient(150deg, rgba(255,207,0,0.29313732328869047) 0%, rgb(23, 23, 23) 35%); 
 }
 
 .Second{
   border: 1px solid rgba(156, 156, 156, 0.39);
-  background: linear-gradient(150deg, rgba(156,156,156,0.29313732328869047) 0%, rgba(255,255,255,0) 35%); 
+  background: linear-gradient(150deg, rgba(156,156,156,0.29313732328869047) 0%, rgb(23, 23, 23) 35%); 
 }
 
 .Third{
     border: 1px solid rgba(150, 86, 2, 0.39);
-    background: linear-gradient(150deg, rgba(150, 86, 2,0.29313732328869047) 0%, rgba(255,255,255,0) 35%); 
+    background: linear-gradient(150deg, rgba(150, 86, 2,0.29313732328869047) 0%, rgb(23, 23, 23) 35%); 
   }
 
 

@@ -48,15 +48,22 @@ export async function AvatarSaverForTable(sid)
   if(fs.existsSync(`${savePath}/${sid}.jpg`)){
     return;
   }
-  const key = process.env.STEAM_API_KEY;
-  let steamid = sid;
-  const response = await fetch(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${key}&steamids=${steamid}`);
-  const data = await response.json();
-  const player = data.response.players[0];
-
-  const avatarResponse = await fetch(player.avatarmedium);
-  if(avatarResponse.ok){
-    console.log("No profile picture for this player. Downloading.");
-    DownloadSteamPFP(avatarResponse, savePath, sid)
+  try{
+    const key = process.env.STEAM_API_KEY;
+    let steamid = sid;
+    const response = await fetch(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${key}&steamids=${steamid}`);
+    const data = await response.json();
+    const player = data.response.players[0];
+  
+    const avatarResponse = await fetch(player.avatarmedium);
+    if(avatarResponse.ok){
+      console.log("No profile picture for this player. Downloading.");
+      DownloadSteamPFP(avatarResponse, savePath, sid)
+    }
   }
+  catch(error)
+  {
+    console.log(error + " --- " + sid);
+  }
+
 }

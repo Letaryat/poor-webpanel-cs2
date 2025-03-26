@@ -26,12 +26,13 @@ export default function ZenithRanking() {
 
 
     useEffect(() => {
+
         const paramsServer = params.get("server");
         const paramsPage = parseInt(params.get("page")) || 1;
-    
+
         setClickedServer(paramsServer);
         setCurrentPage(paramsPage);
-    
+
         async function fetchPlayersData(server, page) {
             try {
                 setLoading(true);
@@ -39,7 +40,7 @@ export default function ZenithRanking() {
                 const data = await response.json();
                 const responsedb = await fetch(`/api/dbcount`);
                 const datadb = await responsedb.json();
-    
+
                 setNumDB(datadb);
                 setPlayersData(data.players || []);
                 setTotalPlayers(data.total);
@@ -50,7 +51,7 @@ export default function ZenithRanking() {
             }
         }
         fetchPlayersData(paramsServer || clickedServer, paramsPage);
-    
+
     }, [searchParams]);
 
     const nextPage = () => {
@@ -58,7 +59,7 @@ export default function ZenithRanking() {
         setCurrentPage(newPage);
         paramPage(newPage);
     };
-    
+
     const prevPage = () => {
         const newPage = Math.max(currentPage - 1, 1);
         setCurrentPage(newPage);
@@ -77,7 +78,7 @@ export default function ZenithRanking() {
     };
 
     const paramPage = (value) => {
-        params.set("page", value); 
+        params.set("page", value);
         router.push(`${pathname}?${params.toString()}`, { scroll: false });
     };
 
@@ -100,9 +101,10 @@ export default function ZenithRanking() {
                 <div className="flex justify-between">
                     <div className="flex gap-2 mb-2">
                         {numDB && numDB.length > 0 ? (
-                            numDB.map((db, i) => (
-                                <Button variant="secondary" className={`${clickedServer == db.id ? "bg-blue-500 text-white" : ""} `}
-                                    key={i}
+                            numDB.map(
+                                (db, i) => (
+                                <Button variant="secondary" className={`${clickedServer === db.id ? "bg-blue-500 text-white" : ""} `}
+                                    key={db.id}
                                     onClick={() => {
                                         setClickedServer(db.id);
                                         setCurrentPage(1);
@@ -130,37 +132,37 @@ export default function ZenithRanking() {
                         <div>Time</div>
                     </div>
                     {
-                    playersData.length === 0 ? (
-                        <div className="flex flex-col border border-red-400 rounded-md p-4">
-                            <p>No players on this page!</p>
-                        </div>
-                    ) :
-                    
-                    playersData.map((player, i) => (                        
-                        <Link href={`/zenith/${player.steam_id}?server=${clickedServer}`} key={i}>
-                            <PlayerListRow
-                                position={(currentPage - 1) * playersPerPage + i + 1}
-                                avatar={`/api/avatar/ifexist/${player.steam_id}`}
-                                nickname={player.name}
-                                points={player.points}
-                                rank={player.rank === "k4.phrases.rank.none" || !player.rank ? "None" : player.rank.split('.')[3] || player.rank || "--"}
-                                kills={player.kills}
-                                deaths={player.deaths}
-                                kd={(player.kills / player.deaths).toFixed(2)}
-                                time={player.time}
-                            />
-                        </Link>
+                        playersData.length === 0 ? (
+                            <div className="flex flex-col border border-red-400 rounded-md p-4">
+                                <p>No players on this page!</p>
+                            </div>
+                        ) :
 
-                    ))}
+                            playersData.map((player, i) => (
+                                <Link href={`/zenith/${player.steam_id}?server=${clickedServer}`} key={i}>
+                                    <PlayerListRow
+                                        position={(currentPage - 1) * playersPerPage + i + 1}
+                                        avatar={`/api/avatar/ifexist/${player.steam_id}`}
+                                        nickname={player.name}
+                                        points={player.points}
+                                        rank={player.rank === "k4.phrases.rank.none" || !player.rank ? "None" : player.rank.split('.')[3] || player.rank || "--"}
+                                        kills={player.kills}
+                                        deaths={player.deaths}
+                                        kd={(player.kills / player.deaths).toFixed(2)}
+                                        time={player.time}
+                                    />
+                                </Link>
+
+                            ))}
                 </div>
 
                 <div className="flex justify-center gap-8 mt-4">
                     <div className="flex gap-1">
                         <button
-                            onClick={() => { 
+                            onClick={() => {
                                 setCurrentPage(1)
                                 paramPage(1)
-                             }}
+                            }}
                             className="px-4 py-2 bg-neutral-900 rounded disabled:opacity-50 disabled:cursor-not-allowed"
                             disabled={currentPage === 1}
                         >
@@ -199,7 +201,7 @@ export default function ZenithRanking() {
                             Next
                         </button>
                         <button
-                            onClick={() => { 
+                            onClick={() => {
                                 setCurrentPage(totalPages);
                                 paramPage(totalPages);
                             }}
