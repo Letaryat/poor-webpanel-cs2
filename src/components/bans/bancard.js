@@ -4,11 +4,16 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion"
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+} from "@/components/ui/hover-card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { SquareArrowOutUpRight } from 'lucide-react';
 import Link from "next/link";
 
-function durationChange(value, status) {
+function durationChange(value, status, ubreason, aubsid, aubname) {
     if (value == 0) {
         return (
             <span className="bg-red-400 bg-opacity-20 text-xs font-base text-red-400 p-2 rounded-2xl flex justify-center">
@@ -17,18 +22,46 @@ function durationChange(value, status) {
         )
     }
     else {
-        if(status === "EXPIRED")
-        {
+        if (status === "EXPIRED") {
             return (
                 <span className="bg-green-400 bg-opacity-20 text-xs font-base text-green-400 p-2 rounded-2xl flex justify-center">
                     EXPIRED :)
                 </span>
             )
         }
-        else{
+        else if (status === "UNBANNED" || status === "UNMUTED") {
+            return (
+                <HoverCard>
+                    <HoverCardTrigger>
+                        <span className="bg-blue-400 bg-opacity-20 text-xs font-base text-blue-400 p-2 rounded-2xl flex justify-center">
+                            {status === "UNBANNED" ? "UNBANNED" : "UNMUTED"}
+                        </span></HoverCardTrigger>
+                    <HoverCardContent>
+                        <div>
+                        <Link target="_blank" href={`/zenith/${aubsid}`}>
+                                <div className="flex items-center gap-2 mt-2 hover:text-blue-400 transition-all ease-in-out">
+                                    <Avatar >
+                                        <AvatarImage src={`/api/avatar/ifexist/${aubsid}`} />
+                                        <AvatarFallback>{aubname}</AvatarFallback>
+                                    </Avatar>
+                                    <p >{aubname}</p>
+                                    <SquareArrowOutUpRight size={16} />
+                                </div>
+                            </Link>
+                        </div>
+                        <span className="text-center">
+                        {ubreason}
+                        </span>
+
+                    </HoverCardContent>
+                </HoverCard>
+
+            )
+        }
+        else {
             return (
                 <span className="bg-orange-400 bg-opacity-20 text-xs font-base text-orange-400 p-2 rounded-2xl flex justify-center">
-                    {value}
+                    {(value / 60) / 24} days
                 </span>
             )
         }
@@ -36,7 +69,7 @@ function durationChange(value, status) {
     }
 }
 
-export function BanCard({ id, pname, psid, asid, aname, reason, duration, end, created, serverid, unbanid, status }) {
+export function BanCard({ id, pname, psid, asid, aname, reason, duration, end, created, serverid, unbanid, status, ubreason, aubsid, aubname }) {
     return (
         <AccordionItem value={`item-${id}`} className="data-[state=open]:bg-zinc-900 rounded-md">
             <AccordionTrigger className="hover:no-underline ">
@@ -48,13 +81,13 @@ export function BanCard({ id, pname, psid, asid, aname, reason, duration, end, c
                                 <AvatarFallback>{pname}</AvatarFallback>
                             </Avatar>
                             <h2 className="font-bold text-lg">{pname}</h2>
-                            
+
                         </div>
 
                         <p>{created}</p>
                     </div>
                     <div className="flex justify-center items-center ">
-                        {durationChange(duration, status)}
+                        {durationChange(duration, status, ubreason, aubsid, aubname)}
                     </div>
                 </div>
             </AccordionTrigger>
@@ -68,7 +101,7 @@ export function BanCard({ id, pname, psid, asid, aname, reason, duration, end, c
                         <div className="h-[68px] flex flex-col justify-center">
                             <h4 className="font-black">Player Steamid64</h4>
                             <Link target="_blank" className="hover:text-blue-400 transition-all ease-in-out" href={`https://steamcommunity.com/profiles/${psid}`}>
-                            <p className="flex  justify-center gap-1 items-center">{psid} <SquareArrowOutUpRight size={16} /></p>
+                                <p className="flex  justify-center gap-1 items-center">{psid} <SquareArrowOutUpRight size={16} /></p>
                             </Link>
                         </div>
                         <div>
@@ -84,14 +117,14 @@ export function BanCard({ id, pname, psid, asid, aname, reason, duration, end, c
                         <div className="flex justify-center items-center flex-col">
                             <h4 className="font-black">Admin</h4>
                             <Link target="_blank" href={`/zenith/${asid}`}>
-                            <div className="flex items-center gap-2 mt-2 hover:text-blue-400 transition-all ease-in-out">
-                                <Avatar >
-                                    <AvatarImage src={`/api/avatar/ifexist/${asid}`} />
-                                    <AvatarFallback>{aname}</AvatarFallback>
-                                </Avatar>
-                                <p >{aname}</p>
-                                <SquareArrowOutUpRight size={16} />
-                            </div>
+                                <div className="flex items-center gap-2 mt-2 hover:text-blue-400 transition-all ease-in-out">
+                                    <Avatar >
+                                        <AvatarImage src={`/api/avatar/ifexist/${asid}`} />
+                                        <AvatarFallback>{aname}</AvatarFallback>
+                                    </Avatar>
+                                    <p >{aname}</p>
+                                    <SquareArrowOutUpRight size={16} />
+                                </div>
                             </Link>
                         </div>
                         <div >

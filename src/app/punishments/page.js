@@ -10,18 +10,32 @@ import {
 } from "@/components/ui/accordion"
 import "./styles.css";
 import { Input } from "@/components/ui/input";
-import ServerRadio from "@/components/bans/serverradio";
-import { AdminList } from "@/components/bans/serverradio";
-import PunishSearch from "./search";
-import { Server } from "lucide-react";
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { Button } from "@/components/ui/button";
+
 export default function BansPage() {
     const [bans, setBans] = useState([]);
+    const [type, setType] = useState("bans");
     const [allbans, setAllBans] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [text, setText] = useState("");
     const [players, setPlayers] = useState([]);
     const [debounceTimeout, setDebounceTimeout] = useState(null);
     const [display, setDisplay] = useState(false);
+
+    const [admins, setAdmins] = useState([]);
+    const [serversSA, setServersSA] = useState([]);
 
     const router = useRouter();
     const pathname = usePathname();
@@ -36,7 +50,7 @@ export default function BansPage() {
 
         async function fetchBans(page) {
             try {
-                const response = await fetch(`/api/simpleadmin/bans?page=${page}`)
+                const response = await fetch(`/api/simpleadmin/bans?page=${page}&type=${type}`)
                 const data = await response.json();
                 setAllBans(data.total)
                 setBans(data.bans || []);
@@ -46,13 +60,29 @@ export default function BansPage() {
             }
         }
         fetchBans(paramsPage)
-    }, [searchParams])
+
+    }, [searchParams, type])
 
     useEffect(() => {
         if (currentPage) {
             paramPage(currentPage);
         }
     }, [currentPage]);
+
+    useEffect(() => {
+        async function fetchServerInfo() {
+            try {
+                const response = await fetch(`/api/simpleadmin/systeminfo/`);
+                const data = await response.json();
+                setAdmins(data.admins)
+                setServersSA(data.servers);
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+        fetchServerInfo();
+    }, [])
 
     const nextPage = () => {
         setCurrentPage(currentPage + 1);
@@ -68,6 +98,13 @@ export default function BansPage() {
     const paramPage = (value) => {
         params.set("page", value);
         router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    };
+
+    const paramServer = (value, type1) => {
+        params.set('page', value);
+        setType(type1);
+        setText("");
+        router.push(`${pathname}?${params.toString()}`);
     };
 
     const totalPages = Math.ceil(allbans / 10) || 1;
@@ -96,7 +133,7 @@ export default function BansPage() {
 
     const fetchPlayers = async () => {
         try {
-            const response = await fetch(`/api/simpleadmin/search?player=${text}&type=bans`);
+            const response = await fetch(`/api/simpleadmin/search?player=${text}&type=${type}`);
             const data = await response.json();
             if (data.players === "Brak") {
                 setPlayers([]);
@@ -109,26 +146,56 @@ export default function BansPage() {
             console.log(error);
         }
     }
-
-
     return (
         <div className="flex justify-center">
             <main className="relative flex container gap-2 flex-col">
                 <div className="flex relative gap-2">
                     <div className="basis-1/4 p-2 ">
-                        <div className="sticky top-0">
+                        <div className="sticky top-2">
+                            <div className="grid grid-cols-2 gap-2 justify-center items-center">
+                                <Button variant="secondary" className={`${type === "bans" ? "bg-blue-500" : ""}`} onClick={(e) => {
+                                    paramServer(1, "bans");
+                                }}>Bans</Button>
+                                <Button variant="secondary" className={`${type === "mutes" ? "bg-blue-500" : ""}`} onClick={(e) => {
+                                    paramServer(1, "mutes");
+                                    console.log(currentPage);
+                                }}>Mutes</Button>
+                            </div>
                             <div>
-                                <h2 className="font-semibold text-base">Search using name or SteamID64</h2>
                                 <Input
+                                    className="mt-2"
+                                    placeholder="Search via Nickname or SteamID64"
                                     value={text}
                                     onChange={(e) => {
                                         setText(e.target.value)
-
                                     }} />
                             </div>
                             <div className="mt-2">
-                                <AdminList />
-                                <ServerRadio />
+                                <Select>
+                                    <SelectTrigger className="w-[100%]">
+                                        <SelectValue placeholder="Admins" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="-1">None</SelectItem>
+                                        {admins.map((a, i) => (
+                                            <SelectItem key={i} value={a.player_steamid}>{a.player_name}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <div className="mt-2 mb-2 grid gap-1">
+                                    <RadioGroup className="gap-1" defaultValue="option-one">
+                                        <div className="flex items-center space-x-1 p-3 border rounded-sm">
+                                            <RadioGroupItem value="option-one" id="option-one" />
+                                            <Label htmlFor="option-one">Any</Label>
+                                        </div>
+                                        {serversSA.map((s, i) => (
+                                            <div className="flex items-center space-x-1 p-3 border rounded-sm">
+                                                <RadioGroupItem value={s.id} id={`server-${s.id}`} />
+                                                <Label htmlFor={`server-${s.id}`}>{s.hostname}</Label>
+                                            </div>
+                                        ))}
+                                    </RadioGroup>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -149,6 +216,9 @@ export default function BansPage() {
                                         serverid={bans.server_id}
                                         unbanid={bans.unban_id}
                                         status={bans.status}
+                                        ubreason={bans.reasonub}
+                                        aubsid={bans.adminUB}
+                                        aubname={bans.adminnameUB}
                                     />
                                 </div>
                             ))}
@@ -169,6 +239,9 @@ export default function BansPage() {
                                         serverid={bans.server_id}
                                         unbanid={bans.unban_id}
                                         status={bans.status}
+                                        ubreason={bans.reasonub}
+                                        aubsid={bans.adminUB}
+                                        aubname={bans.adminnameUB}
                                     />
                                 </div>
                             ))}
