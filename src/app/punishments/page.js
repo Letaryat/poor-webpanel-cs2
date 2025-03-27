@@ -191,7 +191,9 @@ export default function BansPage() {
                                     }} />
                             </div>
                             <div className="mt-2">
-                                {adminsChoose}
+                                <div className="p-1 w-[100%] rounded-md bg-secondary mb-2 text-center">
+                                    <h3 className="text-base ">Admin</h3>
+                                </div>
                                 <Select defaultValue={adminsChoose} onValueChange={(value) => {
                                     setChosenAdmin(value);
                                 }}>
@@ -205,16 +207,21 @@ export default function BansPage() {
                                         ))}
                                     </SelectContent>
                                 </Select>
+                                
+                                <div className="p-1 w-[100%] rounded-md bg-secondary mb-2 text-center mt-2 mb-2">
+                                    <h3 className="text-base font-semibold">Server</h3>
+                                </div>
+
                                 <div className="mt-2 mb-2 grid gap-1">
                                     <RadioGroup className="gap-1" defaultValue={serverChoose} onValueChange={(value) => {
                                         setChosenServer(value);
                                     }}>
-                                        <div className="flex items-center space-x-1 p-3 border rounded-sm">
+                                        <div className="flex items-center space-x-1 p-3 border rounded-md bg-zinc-900">
                                             <RadioGroupItem value="-1" id="any" />
                                             <Label htmlFor="any">Any</Label>
                                         </div>
                                         {serversSA.map((s, i) => (
-                                            <div key={i} className="flex items-center space-x-1 p-3 border rounded-sm">
+                                            <div key={i} className="flex items-center space-x-1 p-3 border rounded-md bg-zinc-900">
                                                 <RadioGroupItem value={s.id} id={`server-${s.id}`} />
                                                 <Label htmlFor={`server-${s.id}`}>{s.hostname}</Label>
                                             </div>
