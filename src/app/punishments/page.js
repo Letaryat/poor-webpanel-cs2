@@ -12,6 +12,7 @@ import "./styles.css";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Skeleton } from "@/components/ui/skeleton";
 
 import {
     Select,
@@ -25,6 +26,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 export default function BansPage() {
+    const [loading, setLoading] = useState(true);
     const [bans, setBans] = useState([]);
     const [type, setType] = useState("bans");
     const [allbans, setAllBans] = useState(null);
@@ -33,27 +35,35 @@ export default function BansPage() {
     const [players, setPlayers] = useState([]);
     const [debounceTimeout, setDebounceTimeout] = useState(null);
     const [display, setDisplay] = useState(false);
+    const [usingSearch, setUsingSearch] = useState(false);
+
 
     const [admins, setAdmins] = useState([]);
     const [serversSA, setServersSA] = useState([]);
+
+    const [adminsChoose, setChosenAdmin] = useState("-1");
+    const [serverChoose, setChosenServer] = useState("-1");
 
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
+    const playersPerPage = 20;
+
     const params = new URLSearchParams(searchParams.toString());
 
     useEffect(() => {
         const paramsPage = Number(params.get("page")) || 1;
-
         setCurrentPage(paramsPage);
-
+        if(usingSearch){return;}
         async function fetchBans(page) {
             try {
+                setLoading(true);
                 const response = await fetch(`/api/simpleadmin/bans?page=${page}&type=${type}`)
                 const data = await response.json();
                 setAllBans(data.total)
                 setBans(data.bans || []);
+                setLoading(false);
             }
             catch (error) {
                 console.log(error);
@@ -63,19 +73,17 @@ export default function BansPage() {
 
     }, [searchParams, type])
 
-    useEffect(() => {
-        if (currentPage) {
-            paramPage(currentPage);
-        }
-    }, [currentPage]);
+
 
     useEffect(() => {
         async function fetchServerInfo() {
             try {
+                setLoading(true);
                 const response = await fetch(`/api/simpleadmin/systeminfo/`);
                 const data = await response.json();
                 setAdmins(data.admins)
                 setServersSA(data.servers);
+                setLoading(false);
             }
             catch (error) {
                 console.log(error);
@@ -83,6 +91,12 @@ export default function BansPage() {
         }
         fetchServerInfo();
     }, [])
+
+    useEffect(() => {
+        if (currentPage) {
+            paramPage(currentPage);
+        }
+    }, [currentPage]);
 
     const nextPage = () => {
         setCurrentPage(currentPage + 1);
@@ -104,6 +118,8 @@ export default function BansPage() {
         params.set('page', value);
         setType(type1);
         setText("");
+        setChosenAdmin("-1");
+        setChosenServer("-1");
         router.push(`${pathname}?${params.toString()}`);
     };
 
@@ -113,39 +129,46 @@ export default function BansPage() {
     const pagesToShow = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
 
     useEffect(() => {
-        if (text === "") {
+        if (text === "" && adminsChoose == "-1" && serverChoose == "-1") {
             setPlayers([]);
             setDisplay(false);
+            setUsingSearch(false);
             return;
         }
         if (debounceTimeout) {
             clearTimeout(debounceTimeout);
         }
         const timeout = setTimeout(() => {
+            setUsingSearch(true);
             fetchPlayers();
             setDisplay(true);
-        }, 500)
+        }, 0)
 
         setDebounceTimeout(timeout);
         return () => clearTimeout;
 
-    }, [text]);
+    }, [text, adminsChoose, serverChoose, currentPage]);
 
     const fetchPlayers = async () => {
+        const paramsPage = Number(params.get("page")) || 1;
         try {
-            const response = await fetch(`/api/simpleadmin/search?player=${text}&type=${type}`);
+            setLoading(true);
+            const response = await fetch(`/api/simpleadmin/search?player=${text}&type=${type}&admin=${adminsChoose}&server=${serverChoose}&page=${paramsPage}`);
             const data = await response.json();
             if (data.players === "Brak") {
                 setPlayers([]);
             }
             else {
                 setPlayers(data.players || []);
+                setAllBans(data.total);
             }
+            setLoading(false);
         }
         catch (error) {
             console.log(error);
         }
     }
+
     return (
         <div className="flex justify-center">
             <main className="relative flex container gap-2 flex-col">
@@ -171,25 +194,30 @@ export default function BansPage() {
                                     }} />
                             </div>
                             <div className="mt-2">
-                                <Select>
+                                {adminsChoose}
+                                <Select defaultValue={adminsChoose} onValueChange={(value) => {
+                                    setChosenAdmin(value);
+                                }}>
                                     <SelectTrigger className="w-[100%]">
                                         <SelectValue placeholder="Admins" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="-1">None</SelectItem>
                                         {admins.map((a, i) => (
-                                            <SelectItem key={i} value={a.player_steamid}>{a.player_name}</SelectItem>
+                                            <SelectItem key={i} value={a.player_steamid}>{a.player_name} </SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
                                 <div className="mt-2 mb-2 grid gap-1">
-                                    <RadioGroup className="gap-1" defaultValue="option-one">
+                                    <RadioGroup className="gap-1" defaultValue={serverChoose} onValueChange={(value) => {
+                                        setChosenServer(value);
+                                    }}>
                                         <div className="flex items-center space-x-1 p-3 border rounded-sm">
-                                            <RadioGroupItem value="option-one" id="option-one" />
-                                            <Label htmlFor="option-one">Any</Label>
+                                            <RadioGroupItem value="-1" id="any" />
+                                            <Label htmlFor="any">Any</Label>
                                         </div>
                                         {serversSA.map((s, i) => (
-                                            <div className="flex items-center space-x-1 p-3 border rounded-sm">
+                                            <div key={i} className="flex items-center space-x-1 p-3 border rounded-sm">
                                                 <RadioGroupItem value={s.id} id={`server-${s.id}`} />
                                                 <Label htmlFor={`server-${s.id}`}>{s.hostname}</Label>
                                             </div>
@@ -249,7 +277,7 @@ export default function BansPage() {
                     </div>
                 </div>
 
-                <div className={`flex justify-center gap-8 mt-4 ${display === true ? "hidden" : "block"}`}>
+                <div className={`flex justify-center gap-8 mt-4 `}>
                     <div className="flex gap-1">
                         <button
                             onClick={() => {
@@ -305,6 +333,7 @@ export default function BansPage() {
                         </button>
                     </div>
                 </div>
+                
 
             </main>
 

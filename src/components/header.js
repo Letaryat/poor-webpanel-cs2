@@ -10,8 +10,8 @@ export function Header() {
         <header className="flex justify-center h-14 border-b border-b-neutral-800 mb-2">
             <div className="container flex items-center border border-neutral-800 border-b-0 border-t-0 pl-2 pr-2 gap-2">
                 <Link href={"/"}><h1 className="text-base font-semibold">Pierdolnik.eu</h1></Link>
-                <Link className={`hover:bg-neutral-800 p-2 rounded-md ${path.startsWith(`/zenith`) ? "bg-neutral-800" : ""}`} href={"/zenith"}>Zenith ranking</Link>  
-                <Link className={`hover:bg-neutral-800 p-2 rounded-md ${path.startsWith(`/punishments`) ? "bg-neutral-800" : ""}`} href={"/punishments"}>SA Bans</Link> 
+                <Link className={`hover:bg-neutral-800 p-2 rounded-md ${path.startsWith(`/zenith`) ? "bg-neutral-800" : ""}`} href={"/zenith"}>Ranking</Link>  
+                <Link className={`hover:bg-neutral-800 p-2 rounded-md ${path.startsWith(`/punishments`) ? "bg-neutral-800" : ""}`} href={"/punishments"}>Bany</Link> 
                 <CustomURLS/>
             </div>
         </header>
