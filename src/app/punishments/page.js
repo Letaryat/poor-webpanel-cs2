@@ -37,7 +37,6 @@ export default function BansPage() {
     const [display, setDisplay] = useState(false);
     const [usingSearch, setUsingSearch] = useState(false);
 
-
     const [admins, setAdmins] = useState([]);
     const [serversSA, setServersSA] = useState([]);
 
@@ -72,8 +71,6 @@ export default function BansPage() {
         fetchBans(paramsPage)
 
     }, [searchParams, type])
-
-
 
     useEffect(() => {
         async function fetchServerInfo() {
