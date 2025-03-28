@@ -10,7 +10,7 @@ import {
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { SquareArrowOutUpRight, CircleUser } from 'lucide-react';
+import { SquareArrowOutUpRight } from 'lucide-react';
 import Link from "next/link";
 
 function durationChange(value, status, ubreason, aubsid, aubname) {
@@ -86,27 +86,22 @@ export function BanCard({ id, pname, psid, asid, aname, reason, duration, end, c
 
                         <p>{created}</p>
                     </div>
-                    <div className="flex justify-center items-center gap-2 ">
-                        <div>
-                            <Link className="hover:text-blue-400 transition ease-in-out" href={`/punishments/${psid}`}>
-                            <CircleUser/>
-                            </Link>
-                        </div>
+                    <div className="flex justify-center items-center ">
                         {durationChange(duration, status, ubreason, aubsid, aubname)}
                     </div>
                 </div>
             </AccordionTrigger>
-            <AccordionContent className="grid gap-2">
+            <AccordionContent className="grid gap-2 p-2">
                 <div>
                     <h4 className="font-black">Server</h4>
                     <p>{serverid}</p>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                     <div className="flex gap-2 flex-col">
-                        <div className="h-[68px] flex flex-col justify-center">
+                        <div className="h-[68px] flex flex-col ">
                             <h4 className="font-black">Player Steamid64</h4>
                             <Link target="_blank" className="hover:text-blue-400 transition-all ease-in-out" href={`https://steamcommunity.com/profiles/${psid}`}>
-                                <p className="flex  justify-center gap-1 items-center">{psid} <SquareArrowOutUpRight size={16} /></p>
+                                <p className="flex  gap-1 items-center">{psid} <SquareArrowOutUpRight size={16} /></p>
                             </Link>
                         </div>
                         <div>
@@ -119,7 +114,7 @@ export function BanCard({ id, pname, psid, asid, aname, reason, duration, end, c
                         </div>
                     </div>
                     <div className="flex gap-2 flex-col">
-                        <div className="flex justify-center items-center flex-col">
+                        <div className="flex flex-col">
                             <h4 className="font-black">Admin</h4>
                             <Link target="_blank" href={`/punishments/${asid}`}>
                                 <div className="flex items-center gap-2 mt-2 hover:text-blue-400 transition-all ease-in-out">

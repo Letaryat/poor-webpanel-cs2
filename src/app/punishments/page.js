@@ -128,6 +128,7 @@ export default function BansPage() {
     useEffect(() => {
         if (text === "" && adminsChoose == "-1" && serverChoose == "-1") {
             setPlayers([]);
+
             setDisplay(false);
             setUsingSearch(false);
             return;
@@ -137,6 +138,7 @@ export default function BansPage() {
         }
         const timeout = setTimeout(() => {
             setUsingSearch(true);
+
             fetchPlayers();
             setDisplay(true);
         }, 0)
@@ -149,6 +151,7 @@ export default function BansPage() {
     const fetchPlayers = async () => {
         const paramsPage = Number(params.get("page")) || 1;
         try {
+            setAllBans(null); 
             setLoading(true);
             const response = await fetch(`/api/simpleadmin/search?player=${text}&type=${type}&admin=${adminsChoose}&server=${serverChoose}&page=${paramsPage}`);
             const data = await response.json();
@@ -208,7 +211,7 @@ export default function BansPage() {
                                     </SelectContent>
                                 </Select>
                                 
-                                <div className="p-1 w-[100%] rounded-md bg-secondary mb-2 text-center mt-2 mb-2">
+                                <div className="p-1 w-[100%] rounded-md bg-secondary mb-2 text-center mt-2">
                                     <h3 className="text-base font-semibold">Server</h3>
                                 </div>
 
@@ -243,8 +246,8 @@ export default function BansPage() {
                                         aname={bans.admin_name}
                                         reason={bans.reason}
                                         duration={bans.duration}
-                                        end={bans.ends}
-                                        created={bans.created}
+                                        end={bans.ends ? new Date(bans.ends).toLocaleString() : "Unknown"}
+                                        created={bans.created ? new Date(bans.created).toLocaleString() : "Unknown"}
                                         serverid={bans.server_id}
                                         unbanid={bans.unban_id}
                                         status={bans.status}
@@ -266,8 +269,8 @@ export default function BansPage() {
                                         aname={bans.admin_name}
                                         reason={bans.reason}
                                         duration={bans.duration}
-                                        end={bans.ends}
-                                        created={bans.created}
+                                        end={bans.ends ? new Date(bans.ends).toLocaleString() : "Unknown"}
+                                        created={bans.created ? new Date(bans.created).toLocaleString() : "Unknown"}
                                         serverid={bans.server_id}
                                         unbanid={bans.unban_id}
                                         status={bans.status}
