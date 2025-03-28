@@ -27,13 +27,13 @@ export default async function PlayerProfile({ params }) {
         SELECT sa_bans.id, sa_bans.player_name, sa_bans.player_steamid, sa_bans.admin_steamid, sa_bans.admin_name, sa_bans.reason, sa_bans.duration, sa_bans.ends, sa_bans.created, sa_servers.hostname AS server_id, sa_bans.unban_id, sa_bans.status
         FROM sa_bans 
         LEFT JOIN sa_servers ON sa_bans.server_id = sa_servers.id 
-        WHERE player_steamid = ${`${id}`}
+        WHERE player_steamid = ${`${id}`} ORDER BY created DESC
      `;
 
     let playerMutes = await prisma.$queryRaw`
      SELECT sa_mutes.id, sa_mutes.player_name, sa_mutes.player_steamid, sa_mutes.admin_steamid, sa_mutes.admin_name, sa_mutes.reason, sa_mutes.duration, sa_mutes.ends, sa_mutes.created, sa_mutes.type, sa_servers.hostname AS server_id, sa_mutes.unmute_id, sa_mutes.status
      FROM sa_mutes LEFT JOIN sa_servers ON sa_mutes.server_id = sa_servers.id
-     WHERE player_steamid = ${`${id}`}
+     WHERE player_steamid = ${`${id}`} ORDER BY created DESC
     `;
 
     prisma.$disconnect();
@@ -45,24 +45,29 @@ export default async function PlayerProfile({ params }) {
                     <p className="">Punishment history</p>
                 </div>
                 <div className="flex justify-center">
-                    <div className="">
-                        <div className="rounded-full bg-zinc-800 p-4 relative top-16 left-6 text-red-400">
-                            <Ban />
-                        </div>
-                    </div>
+
                     <div>
                         <Image className="rounded-full bg-zinc-800 border-zinc-800 border-8" src={playerSteamData.avatarfull} width={184} height={184} alt="avatar" unoptimized />
                         <IfAdmin sid={id} />
                     </div>
-                    <div>
-                        <div className="rounded-full bg-zinc-800 p-4 relative top-16 right-6 text-red-400">
-                            <MicOff />
-                        </div>
-                    </div>
+
                 </div>
                 <div className="flex flex-col justify-center items-center">
-                    <p className="mb-2">Was playing on:</p>
                     <PlayerServers sid={id} />
+                </div>
+                <div className="grid grid-cols-2 gap-2 ">
+                    <div className="flex gap-2  items-center">
+                        <div className="rounded-full bg-zinc-800 p-4 relative text-red-400">
+                            <Ban />
+                        </div>
+                        Bans
+                    </div>
+                    <div className="flex gap-2  items-center">
+                        <div className="rounded-full bg-zinc-800 p-4 relative  text-red-400">
+                            <MicOff />
+                        </div>
+                        Mutes
+                    </div>
                 </div>
                 <div className="grid grid-cols-2 justify-center gap-1">
                     <div className="flex justify-center ">
@@ -91,7 +96,7 @@ export default async function PlayerProfile({ params }) {
                             ) : (
                                 <div className="flex justify-center items-center">
                                     <p className="flex justify-center p-1 pl-2 pr-2 items-center rounded-md border border-green-800 bg-green-400 bg-opacity-20">
-                                    No bans founded for this player! </p>
+                                        No bans founded for this player! </p>
                                 </div>
                             )}
                         </Accordion>
@@ -121,7 +126,7 @@ export default async function PlayerProfile({ params }) {
                             ) : (
                                 <div className="flex justify-center items-center">
                                     <p className="flex justify-center p-1 pl-2 pr-2 items-center rounded-md border border-green-800 bg-green-400 bg-opacity-20">
-                                    No mutes founded for this player! </p>
+                                        No mutes founded for this player! </p>
                                 </div>
                             )}
                         </Accordion>
