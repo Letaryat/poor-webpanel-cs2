@@ -2,6 +2,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation";
 import { CustomURLS } from "./customurls";
+import SteamButtons from "./steamauth/LoginButton";
 export function Header() {
     const path = usePathname();
     let patharray = path.split("/").filter((path) => path);
@@ -13,6 +14,7 @@ export function Header() {
                 <Link className={`hover:bg-neutral-800 p-2 rounded-md ${path.startsWith(`/zenith`) ? "bg-neutral-800" : ""}`} href={"/zenith"}>Ranking</Link>  
                 <Link className={`hover:bg-neutral-800 p-2 rounded-md ${path.startsWith(`/punishments`) ? "bg-neutral-800" : ""}`} href={"/punishments"}>Bany</Link> 
                 <CustomURLS/>
+                <SteamButtons/>
             </div>
         </header>
     )
