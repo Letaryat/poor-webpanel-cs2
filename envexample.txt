@@ -4,6 +4,16 @@ ZENITH_DATABASE='{
     "1": { "name": "Mirage", "url": "mysql://username:@host:port/database" }
 }'
 
+SIMPLEADMIN_DATABASE="mysql://root:@localhost:3306/db_simpleadmin1"
+
 NEXT_PUBLIC_CUSTOMURL='{"Discord": "url", "Steam Group": "url"}'
 
 STEAM_API_KEY = ""
+
+
+INTERNAL_API_KEY="siema"
+
+NEXT_PUBLIC_API_URL=http://192.168.33.6:3000/
+
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET="string"

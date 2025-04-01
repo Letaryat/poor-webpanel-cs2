@@ -56,5 +56,3 @@ async function auth(req, ctx) {
 }
 
 export { auth as GET, auth as POST };
-
-export {auth}

@@ -33,7 +33,7 @@ export default function SteamButtons() {
                 </div>
 
             ) : (
-                <button onClick={() => signIn("steam")}>Login</button>
+                <button className='p-1 pl-2 pr-2 bg-blue-500 rounded-md bg-opacity-30 border hover:bg-opacity-100 transition-all ease-in-out' onClick={() => signIn("steam")}>Login via steam</button>
             )}
 
 

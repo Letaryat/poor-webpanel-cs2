@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/hover-card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { SquareArrowOutUpRight, CircleUser } from 'lucide-react';
+import AdminPanelAcord from "@/app/punishments/admin";
 import Link from "next/link";
 
 function durationChange(value, status, ubreason, aubsid, aubname) {
@@ -87,7 +88,7 @@ export function BanCard({ id, pname, psid, asid, aname, reason, duration, end, c
                         <p>{created}</p>
                     </div>
                     <div className="flex justify-center items-center gap-2 ">
-                        <div>
+                        <div className="flex gap-2 items-center">
                             <Link className="hover:text-blue-400 transition ease-in-out" href={`/punishments/${psid}`}>
                             <CircleUser/>
                             </Link>
@@ -142,6 +143,8 @@ export function BanCard({ id, pname, psid, asid, aname, reason, duration, end, c
                         </div>
                     </div>
                 </div>
+
+                    <AdminPanelAcord banId={id} reason={reason || "empty"}/>
 
             </AccordionContent>
         </AccordionItem>

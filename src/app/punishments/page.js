@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Skeleton } from "@/components/ui/skeleton";
+import AdminPanelAcord from "./admin";
 
 import {
     Select,
@@ -50,6 +51,7 @@ export default function BansPage() {
     const playersPerPage = 20;
 
     const params = new URLSearchParams(searchParams.toString());
+
 
     useEffect(() => {
         const paramsPage = Number(params.get("page")) || 1;
