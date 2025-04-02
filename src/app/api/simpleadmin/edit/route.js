@@ -15,8 +15,10 @@ export async function POST(req) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
     try {
-        const {banId, reason} = await req.json();
-        console.log(banId + " | " + reason)
+        const {banId, reason, end, status, type, ubreason} = await req.json();
+        var newEnd = new Date(end).toLocaleString();
+
+        console.log(banId + " | " + reason + " | " + newEnd + " | " + status + " | " + type)
         if(!banId)
         {
             return NextResponse.json({ error: "Missing data"}, {status: 400});
@@ -28,10 +30,45 @@ export async function POST(req) {
                 },
             },
         });
-        const updateBan = await prisma.$queryRaw`
-        UPDATE sa_bans SET sa_bans.reason = ${reason} WHERE id = ${banId}
-        `;
-        return NextResponse.json(updateBan, {status: 200});
+
+        var updateBan;
+        var test;
+        if(type === "bans")
+        {
+            if(status === "UNBANNED"){
+                updateBan = await prisma.$queryRaw`
+                UPDATE sa_bans SET sa_bans.reason = ${reason}, sa_bans.ends = ${end}, sa_bans.status = ${status} WHERE id = ${banId};
+                `;
+                test = await prisma.$queryRaw`
+                INSERT INTO sa_unbans (ban_id, admin_id, reason, date) VALUES (${banId}, (SELECT id FROM sa_admins WHERE player_steamid = ${steamid} LIMIT 1), ${ubreason}, NOW());
+                `
+
+            }
+            else{
+                updateBan = await prisma.$queryRaw`
+                UPDATE sa_bans SET sa_bans.reason = ${reason}, sa_bans.ends = ${end}, sa_bans.status = ${status} WHERE id = ${banId}`;
+            }
+        }
+        else if(type === "mutes")
+        {
+            if(status === "UNBANNED"){
+                updateBan = await prisma.$queryRaw`
+                UPDATE sa_mutes SET sa_mutes.reason = ${reason}, sa_mutes.ends = ${end}, sa_mutes.status = ${status} WHERE id = ${banId};
+                `;
+                test = await prisma.$queryRaw`
+                INSERT INTO sa_unmutes (mute_id, admin_id, reason, date) VALUES (${banId}, (SELECT id FROM sa_admins WHERE player_steamid = ${steamid} LIMIT 1), ${ubreason}, NOW());
+                `
+
+            }
+            else{
+                updateBan = await prisma.$queryRaw`
+                UPDATE sa_mutes SET sa_mutes.reason = ${reason}, sa_mutes.ends = ${end}, sa_mutes.status = ${status} WHERE id = ${banId}`;
+            }
+        }
+        //const updateBan = await prisma.$queryRaw`
+        //UPDATE sa_bans SET sa_bans.reason = ${reason}, sa_bans.ends = ${end}, sa_bans.status = ${status} WHERE id = ${banId}
+        //`;
+        return NextResponse.json({updateBan, test}, {status: 200});
     }
     catch (error) {
         console.log(error)

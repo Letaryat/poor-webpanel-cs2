@@ -152,3 +152,14 @@ background: linear-gradient(150deg, rgba(255,207,0,0.29313732328869047) 0%, rgb(
 }
   */
 
+  .anim-fade{
+    animation-name: fade;
+    animation-duration: 0.5s;
+
+  }
+
+
+  @keyframes fade{
+    0% {opacity: 0% }
+    100% { opacity:100% }
+  }

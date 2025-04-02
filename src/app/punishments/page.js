@@ -256,6 +256,7 @@ export default function BansPage() {
                                         ubreason={bans.reasonub}
                                         aubsid={bans.adminUB}
                                         aubname={bans.adminnameUB}
+                                        type={type}
                                     />
                                 </div>
                             ))}
@@ -279,6 +280,7 @@ export default function BansPage() {
                                         ubreason={bans.reasonub}
                                         aubsid={bans.adminUB}
                                         aubname={bans.adminnameUB}
+                                        type={type}
                                     />
                                 </div>
                             ))}

@@ -16,6 +16,35 @@ import Link from "next/link";
 
 function durationChange(value, status, ubreason, aubsid, aubname) {
     if (value == 0) {
+        if(status === "UNBANNED" || status === "UNMUTED"){
+            return (
+                <HoverCard>
+                    <HoverCardTrigger>
+                        <span className="bg-blue-400 bg-opacity-20 text-xs font-base text-blue-400 p-2 rounded-2xl flex justify-center">
+                            {status === "UNBANNED" ? "UNBANNED" : "UNMUTED"}
+                        </span></HoverCardTrigger>
+                    <HoverCardContent>
+                        <div>
+                        <Link target="_blank" href={`/zenith/${aubsid}`}>
+                                <div className="flex items-center gap-2 mt-2 hover:text-blue-400 transition-all ease-in-out">
+                                    <Avatar >
+                                        <AvatarImage src={`/api/avatar/ifexist/${aubsid}`} />
+                                        <AvatarFallback>{aubname}</AvatarFallback>
+                                    </Avatar>
+                                    <p >{aubname}</p>
+                                    <SquareArrowOutUpRight size={16} />
+                                </div>
+                            </Link>
+                        </div>
+                        <span className="text-center">
+                        {ubreason}
+                        </span>
+
+                    </HoverCardContent>
+                </HoverCard>
+
+            )
+        }
         return (
             <span className="bg-red-400 bg-opacity-20 text-xs font-base text-red-400 p-2 rounded-2xl flex justify-center">
                 FOREVER
@@ -30,7 +59,7 @@ function durationChange(value, status, ubreason, aubsid, aubname) {
                 </span>
             )
         }
-        else if (status === "UNBANNED" || status === "UNMUTED") {
+        else if(status === "UNBANNED" || status === "UNMUTED"){
             return (
                 <HoverCard>
                     <HoverCardTrigger>
@@ -70,7 +99,7 @@ function durationChange(value, status, ubreason, aubsid, aubname) {
     }
 }
 
-export function BanCard({ id, pname, psid, asid, aname, reason, duration, end, created, serverid, unbanid, status, ubreason, aubsid, aubname }) {
+export function BanCard({ id, pname, psid, asid, aname, reason, duration, end, created, serverid, unbanid, status, ubreason, aubsid, aubname, type }) {
     return (
         <AccordionItem value={`item-${id}`} className="data-[state=open]:bg-zinc-900 rounded-md">
             <AccordionTrigger className="hover:no-underline ">
@@ -144,7 +173,7 @@ export function BanCard({ id, pname, psid, asid, aname, reason, duration, end, c
                     </div>
                 </div>
 
-                    <AdminPanelAcord banId={id} reason={reason || "empty"}/>
+                    <AdminPanelAcord banId={id} reason={reason || "empty"} type={type}/>
 
             </AccordionContent>
         </AccordionItem>
