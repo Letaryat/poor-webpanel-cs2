@@ -12,7 +12,7 @@ import { useSearchParams, usePathname, useRouter } from 'next/navigation'
 export default function ZenithRanking() {
     const [playersData, setPlayersData] = useState([]);
     const [totalPlayers, setTotalPlayers] = useState(null);
-    const [clickedServer, setClickedServer] = useState(0);
+    const [clickedServer, setClickedServer] = useState(null);
     const [loading, setLoading] = useState(true);
     const [numDB, setNumDB] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -24,12 +24,14 @@ export default function ZenithRanking() {
 
     const params = new URLSearchParams(searchParams.toString());
 
+    if(params.get("server") === null)
+    {
+        params.set("server", 0);
+    }
 
     useEffect(() => {
-
         const paramsServer = params.get("server");
         const paramsPage = parseInt(params.get("page")) || 1;
-
         setClickedServer(paramsServer);
         setCurrentPage(paramsPage);
 
@@ -40,7 +42,6 @@ export default function ZenithRanking() {
                 const data = await response.json();
                 const responsedb = await fetch(`/api/dbcount`);
                 const datadb = await responsedb.json();
-
                 setNumDB(datadb);
                 setPlayersData(data.players || []);
                 setTotalPlayers(data.total);

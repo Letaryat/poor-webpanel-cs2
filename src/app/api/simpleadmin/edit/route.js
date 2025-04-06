@@ -18,7 +18,7 @@ export async function POST(req) {
         const {banId, reason, end, status, type, ubreason} = await req.json();
         var newEnd = new Date(end).toLocaleString();
 
-        console.log(banId + " | " + reason + " | " + newEnd + " | " + status + " | " + type)
+        console.log(banId + " | " + reason + " | " + newEnd + " | " + status + " | " + type + " | " + steamid + " | " + session) 
         if(!banId)
         {
             return NextResponse.json({ error: "Missing data"}, {status: 400});

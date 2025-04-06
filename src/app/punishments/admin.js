@@ -21,6 +21,5 @@ export default function AdminPanelAcord({ banId, reason, type}) {
             <AdminEditPunish banId={banId} usersid={session.data.user.steamid} ogreason={reason} type={type}/>
         </div>
         </div>
-
     )
 }

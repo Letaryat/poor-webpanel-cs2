@@ -224,6 +224,7 @@ export default function BansPage() {
                                 <div className="mt-2 mb-2 grid gap-1">
                                     <RadioGroup className="gap-1" value={serverChoose} onValueChange={(value) => {
                                         setChosenServer(value);
+                                        setCurrentPage(1);
                                     }}>
                                         <div className="flex items-center space-x-1 p-3 border rounded-md bg-zinc-900">
                                             <RadioGroupItem value="-1" id="any" />
