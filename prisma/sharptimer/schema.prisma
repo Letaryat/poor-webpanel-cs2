@@ -1,0 +1,151 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../node_modules/.prisma/client-sharptimer"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("SHARPTIMER_DATABASE")
+}
+
+model PlayerRecords {
+  MapName       String  @db.VarChar(255)
+  SteamID       String  @db.VarChar(255)
+  PlayerName    String? @db.VarChar(255)
+  TimerTicks    Int?
+  FormattedTime String? @db.VarChar(255)
+  UnixStamp     Int?    @default(0)
+  LastFinished  Int?    @default(0)
+  TimesFinished Int?    @default(0)
+  Style         Int     @default(0)
+
+  @@id([MapName, SteamID, Style])
+}
+
+model PlayerStageTimes {
+  MapName       String  @db.VarChar(255)
+  SteamID       String  @db.VarChar(20)
+  PlayerName    String? @db.VarChar(32)
+  Stage         Int
+  TimerTicks    Int?
+  FormattedTime String? @db.VarChar(255)
+  Velocity      String? @db.VarChar(255)
+
+  @@id([MapName, SteamID, Stage])
+}
+
+model PlayerStats {
+  SteamID        String   @id @db.VarChar(255)
+  PlayerName     String?  @db.VarChar(255)
+  TimesConnected Int?
+  LastConnected  Int?
+  GlobalPoints   Int?
+  HideTimerHud   Boolean?
+  HideKeys       Boolean?
+  SoundsEnabled  Boolean?
+  IsVip          Boolean?
+  BigGifID       String?  @db.VarChar(255)
+  HideJS         Boolean? @default(false)
+  PlayerFov      Int?     @default(0)
+  HideWeapon     Boolean? @default(false)
+  HidePlayers    Boolean? @default(false)
+}
+
+model Players {
+  id          Int      @id @default(autoincrement())
+  steamid64   String   @unique(map: "steamid64") @db.VarChar(63)
+  name        String?  @db.VarChar(255)
+  lastconnect DateTime @default(now()) @db.Timestamp(0)
+}
+
+model st_migrations {
+  id      Int    @id @default(autoincrement())
+  version String @db.VarChar(255)
+}
+
+model store_equipments {
+  id       Int    @id @default(autoincrement())
+  SteamID  BigInt @db.UnsignedBigInt
+  Type     String @db.VarChar(16)
+  UniqueId String @db.VarChar(256)
+  Slot     Int?
+}
+
+model store_items {
+  id               Int      @id @default(autoincrement())
+  SteamID          BigInt   @db.UnsignedBigInt
+  Price            Int      @db.UnsignedInt
+  Type             String   @db.VarChar(16)
+  UniqueId         String   @db.VarChar(256)
+  DateOfPurchase   DateTime @db.DateTime(0)
+  DateOfExpiration DateTime @db.DateTime(0)
+}
+
+model store_players {
+  id             Int      @id @unique(map: "id") @default(autoincrement())
+  SteamID        BigInt   @unique(map: "SteamID") @db.UnsignedBigInt
+  PlayerName     String?  @db.VarChar(255)
+  Credits        Int
+  DateOfJoin     DateTime @db.DateTime(0)
+  DateOfLastJoin DateTime @db.DateTime(0)
+  Vip            Boolean
+}
+
+model wp_player_agents {
+  steamid  String  @unique(map: "steamid") @db.VarChar(18)
+  agent_ct String? @db.VarChar(64)
+  agent_t  String? @db.VarChar(64)
+}
+
+model wp_player_gloves {
+  steamid         String @db.VarChar(18)
+  weapon_team     Int
+  weapon_defindex Int
+
+  @@unique([steamid, weapon_team], map: "steamid")
+}
+
+model wp_player_knife {
+  steamid     String @db.VarChar(18)
+  weapon_team Int
+  knife       String @db.VarChar(64)
+
+  @@unique([steamid, weapon_team], map: "steamid")
+}
+
+model wp_player_music {
+  steamid     String @db.VarChar(64)
+  weapon_team Int
+  music_id    Int
+
+  @@unique([steamid, weapon_team], map: "steamid")
+}
+
+model wp_player_pins {
+  steamid     String @db.VarChar(64)
+  weapon_team Int
+  id          Int
+
+  @@unique([steamid, weapon_team], map: "steamid")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model wp_player_skins {
+  steamid               String  @db.VarChar(18)
+  weapon_team           Int
+  weapon_defindex       Int
+  weapon_paint_id       Int
+  weapon_wear           Float   @default(0.000001) @db.Float
+  weapon_seed           Int     @default(0)
+  weapon_nametag        String? @db.VarChar(128)
+  weapon_stattrak       Boolean @default(false)
+  weapon_stattrak_count Int     @default(0)
+  weapon_sticker_0      String  @default("0;0;0;0;0;0;0") @db.VarChar(128)
+  weapon_sticker_1      String  @default("0;0;0;0;0;0;0") @db.VarChar(128)
+  weapon_sticker_2      String  @default("0;0;0;0;0;0;0") @db.VarChar(128)
+  weapon_sticker_3      String  @default("0;0;0;0;0;0;0") @db.VarChar(128)
+  weapon_sticker_4      String  @default("0;0;0;0;0;0;0") @db.VarChar(128)
+  weapon_keychain       String  @default("0;0;0;0;0") @db.VarChar(128)
+
+  @@unique([steamid, weapon_team, weapon_defindex], map: "steamid")
+}
