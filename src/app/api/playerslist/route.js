@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import FetchSteamPlayerInfo from "../steamprofile/route";
-import {AvatarSaverForTable} from "../avatar/saveavatar/route";
+import { AvatarSaverForTable } from "../avatar/saveavatar/route";
 const databases = JSON.parse(process.env.ZENITH_DATABASE || "{}");
 
 //const prisma = new PrismaClient();
@@ -15,33 +15,33 @@ export async function GET(req) {
 
         console.log(databases[server]["url"])
 
-        if(!databases[server]){
-            return new Response(JSON.stringify({ error: `No server in db` }), { 
-                status: 500, 
-                headers: { "Content-Type": "application/json" } 
+        if (!databases[server]) {
+            return new Response(JSON.stringify({ error: `No server in db` }), {
+                status: 500,
+                headers: { "Content-Type": "application/json" }
             });
         }
 
         const prisma = new PrismaClient({
             datasources: {
-                db: { url:databases[server]["url"]}
+                db: { url: databases[server]["url"] }
             }
         })
 
         const players = await prisma.$queryRaw`
-            SELECT 
-                steam_id, 
-                name, 
-                last_online, 
-                JSON_UNQUOTE(JSON_EXTRACT(\`K4-Zenith-Ranks.storage\`, '$.Points')) AS points,
-                JSON_UNQUOTE(JSON_EXTRACT(\`K4-Zenith-Ranks.storage\`, '$.Rank')) AS rank,
-                JSON_UNQUOTE(JSON_EXTRACT(\`K4-Zenith-Stats.storage\`, '$.Kills')) AS kills,
-                JSON_UNQUOTE(JSON_EXTRACT(\`K4-Zenith-Stats.storage\`, '$.Deaths')) AS deaths,
-                JSON_UNQUOTE(JSON_EXTRACT(\`K4-Zenith-TimeStats.storage\`, '$.TotalPlaytime')) AS time
-            FROM zenith_player_storage
-            ORDER BY CAST(points AS UNSIGNED) DESC
-            LIMIT ${limit} OFFSET ${offset};
-        `;
+        SELECT 
+            steam_id, 
+            name, 
+            last_online, 
+            JSON_UNQUOTE(JSON_EXTRACT(\`K4-Zenith-Ranks.storage\`, '$.Points')) AS points,
+            JSON_UNQUOTE(JSON_EXTRACT(\`K4-Zenith-Ranks.storage\`, '$.Rank')) AS \`rank\`,
+            JSON_UNQUOTE(JSON_EXTRACT(\`K4-Zenith-Stats.storage\`, '$.Kills')) AS kills,
+            JSON_UNQUOTE(JSON_EXTRACT(\`K4-Zenith-Stats.storage\`, '$.Deaths')) AS deaths,
+            JSON_UNQUOTE(JSON_EXTRACT(\`K4-Zenith-TimeStats.storage\`, '$.TotalPlaytime')) AS time
+        FROM zenith_player_storage
+        ORDER BY CAST(points AS UNSIGNED) DESC
+        LIMIT ${limit} OFFSET ${offset};
+    `;
         /*
         const playersWithAvatars = await Promise.all(players.map(async (player) => {
             try {
@@ -73,17 +73,17 @@ export async function GET(req) {
 
         return new Response(JSON.stringify({
             players: players,
-            total: totalPlayers, 
+            total: totalPlayers,
             page,
             limit
-        }), { 
-            status: 200, 
-            headers: { "Content-Type": "application/json" } 
+        }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
         });
     } catch (error) {
-        return new Response(JSON.stringify({ error: `Błąd pobierania danych: ${error.message}` }), { 
-            status: 500, 
-            headers: { "Content-Type": "application/json" } 
+        return new Response(JSON.stringify({ error: `Błąd pobierania danych: ${error.message}` }), {
+            status: 500,
+            headers: { "Content-Type": "application/json" }
         });
     }
 }

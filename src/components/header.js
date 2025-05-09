@@ -14,6 +14,7 @@ export function Header() {
                 <Link href={"/"}><h1 className="text-base font-semibold">Pierdolnik.eu</h1></Link>
                 <Link className={`hover:bg-neutral-800 p-2 rounded-md ${path.startsWith(`/zenith`) ? "bg-neutral-800" : ""}`} href={"/zenith"}>Ranking</Link>  
                 <Link className={`hover:bg-neutral-800 p-2 rounded-md ${path.startsWith(`/punishments`) ? "bg-neutral-800" : ""}`} href={"/punishments"}>Bany</Link> 
+                <Link className={`hover:bg-neutral-800 p-2 rounded-md ${path.startsWith(`/sharptimer`) ? "bg-neutral-800" : ""}`} href={"/sharptimer"}>Sharptimer</Link> 
                 <CustomURLS/>
                 </div>
                 <div className="flex items-center">
