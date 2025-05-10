@@ -27,7 +27,7 @@ export async function GET(req) {
         `;
 
         let totalquery = await prisma.$queryRaw`
-        SELECT COUNT(*) as total FROM PlayerRecords
+        SELECT COUNT(*) as total FROM PlayerRecords WHERE MapName LIKE ${map} AND (PlayerName LIKE ${newPlayer} OR SteamID LIKE ${newPlayer})
         `
 
         let total = Number(totalquery[0].total);

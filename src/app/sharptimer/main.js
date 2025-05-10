@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select"
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import STPagination from "./pagination"
 
 export default function MainSharpTimer() {
     const [loading, setLoading] = useState(true);
@@ -18,7 +19,7 @@ export default function MainSharpTimer() {
     const [dataSearch, setDataSearch] = useState([]);
     const [type, setType] = useState("global");
     const [totaldata, setTotalData] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
+    //const [currentPage, setCurrentPage] = useState(1);
     const [map, setMap] = useState("%");
     const [maps, setMaps] = useState([]);
 
@@ -38,11 +39,11 @@ export default function MainSharpTimer() {
     //Fetching data:
     useEffect(() => {
         const paramsPage = parseInt(params.get("page")) || 1;
-        setCurrentPage(paramsPage)
+        //setCurrentPage(paramsPage)
         async function fetchPlayersData(page, map) {
             try {
                 setLoading(true);
-                const response = await fetch(`/api/sharptimer/records?map=${map}`);
+                const response = await fetch(`/api/sharptimer/records?map=${map}&page=${paramsPage}`);
                 const data = await response.json();
                 setData(data.data);
                 setTotalData(data.total);
@@ -62,7 +63,7 @@ export default function MainSharpTimer() {
                 const response = await fetch(`/api/sharptimer/maps?type=${type}`);
                 const data = await response.json();
                 setMaps(data.data);
-                setMap(data.data[0].MapName);
+                setMap("surf_kitsune");
             }
             catch (error) {
                 console.log("Error fetching maps!");
@@ -110,28 +111,7 @@ export default function MainSharpTimer() {
 
     }, [text]);
 
-    //Pagination:
-    const nextPage = () => {
-        setCurrentPage(currentPage + 1);
-        paramPage(currentPage + 1);
-    }
 
-    const prevPage = () => {
-        const newPage = Math.max(currentPage - 1, 1);
-        setCurrentPage(newPage);
-        paramPage(newPage);
-    }
-
-    const paramPage = (value) => {
-        params.set("page", value);
-        router.push(`${pathname}?${params.toString()}`, { scroll: false });
-    };
-
-
-    const totalPages = Math.ceil(totaldata / 10) || 1;
-    const startPage = Math.max(1, Math.min(currentPage - 3, totalPages - 6));
-    const endPage = Math.min(totalPages, startPage + 6);
-    const pagesToShow = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
 
     return (
         <div className="flex w-full gap-2">
@@ -180,25 +160,9 @@ export default function MainSharpTimer() {
                         setText(e.target.value)
                     }} />
 
-                <div className="flex gap-1">
-                    <button
-                        onClick={nextPage}
-                        className="px-4 py-2 bg-neutral-900 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={(currentPage * 10) >= totaldata}
-                    >
-                        Next
-                    </button>
-                    <button
-                        onClick={() => {
-                            setCurrentPage(totalPages);
-                            paramPage(totalPages);
-                        }}
-                        className="px-4 py-2 bg-neutral-900 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={(currentPage * 10) >= totaldata}
-                    >
-                        Last
-                    </button>
-                </div>
+                    <STPagination
+                    totaldata={totaldata}
+                    />
 
             </div>
             <div className="rounded-md w-full">
