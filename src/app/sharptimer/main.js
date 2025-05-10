@@ -133,12 +133,12 @@ export default function MainSharpTimer() {
         <div className="flex w-full gap-2">
             <div className=" rounded-md w-[500px] max-w-[500px]">
                 <div className="grid grid-cols-3  grid-rows-2 gap-2 justify-between mb-2">
-                    <Button className="col-span-3 h-[42px]" variant="secondary" onClick={() => {
+                    <Button className={`col-span-3 ${type === "global" ? "bg-blue-500" : ""}`} variant="secondary" onClick={() => {
                         changeType("global");
                     }}>Global</Button>
                     {
                         mapExist.surf ? (
-                            <Button onClick={() => {
+                            <Button className={`${type === "surf" ? "bg-blue-500" : ""}`} onClick={() => {
                                 changeType("surf");
                             }}
                                 variant="secondary">Surf</Button>
@@ -146,7 +146,7 @@ export default function MainSharpTimer() {
                     }
                     {
                         mapExist.bhop ? (
-                            <Button onClick={() => {
+                            <Button className={`${type === "bhop" ? "bg-blue-500" : ""}`} onClick={() => {
                                 changeType("bhop");
                             }}
                                 variant="secondary">Bhop</Button>
@@ -154,7 +154,7 @@ export default function MainSharpTimer() {
                     }
                     {
                         mapExist.kz ? (
-                            <Button onClick={() => {
+                            <Button className={`${type === "kz" ? "bg-blue-500" : ""}`} onClick={() => {
                                 changeType("kz");
                             }}
                                 variant="secondary">Kz</Button>
