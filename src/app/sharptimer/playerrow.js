@@ -2,9 +2,9 @@ import Image from "next/image"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { SquareArrowOutUpRight, CircleUser } from 'lucide-react';
 import Link from "next/link";
-export function PlayerRow({ name, sid, time, style, timesfinished }) {
+export function PlayerRow({ name, sid, time, style, timesfinished, mapname }) {
     return (
-        <div className="grid grid-cols-4 p-2 border mb-1 rounded-md text-center items-center">
+        <div className="grid grid-cols-5 p-2 border mb-1 rounded-md text-center items-center">
             <div className="flex gap-2 items-center">
                 <Link className="hover:text-blue-400 transition ease-in-out" href={`/sharptimer/${sid}`}>
                     <CircleUser />
@@ -16,6 +16,7 @@ export function PlayerRow({ name, sid, time, style, timesfinished }) {
                 {name}
             </div>
             <div>{time}</div>
+            <div>{mapname}</div>
             <div>{style}</div>
             <div>{timesfinished}</div>
         </div>

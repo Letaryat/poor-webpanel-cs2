@@ -6,8 +6,11 @@ export async function GET(req) {
         const page = parseInt(searchParams.get("page")) || 1;
         const map = searchParams.get('map') || "%";
         const type = searchParams.get("type") || "global";
+        const player = searchParams.get("player") || "%";
         const limit = 10;
         const offset = (page - 1) * limit;
+
+        const newPlayer = `${player}%`
 
         console.log(map);
 
@@ -20,7 +23,7 @@ export async function GET(req) {
         });
 
         let dataquery = await prisma.$queryRaw`
-        SELECT * FROM PlayerRecords WHERE MapName LIKE ${map} ORDER BY TimerTicks ASC LIMIT ${limit} OFFSET ${offset};
+        SELECT * FROM PlayerRecords WHERE MapName LIKE ${map} AND (PlayerName LIKE ${newPlayer} OR SteamID LIKE ${newPlayer}) ORDER BY TimerTicks ASC LIMIT ${limit} OFFSET ${offset};
         `;
 
         let totalquery = await prisma.$queryRaw`
