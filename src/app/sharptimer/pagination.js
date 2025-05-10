@@ -36,7 +36,7 @@ export default function STPagination({ totaldata }) {
     const pagesToShow = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
 
     return (
-        <div className="flex justify-center gap-8 mt-4">
+        <div className="flex justify-center gap-2 mt-4">
             <div className="flex gap-1">
                 <button
                     onClick={() => {

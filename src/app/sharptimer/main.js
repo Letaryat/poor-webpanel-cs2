@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import STPagination from "./pagination"
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function MainSharpTimer() {
     const [loading, setLoading] = useState(true);
@@ -22,7 +23,7 @@ export default function MainSharpTimer() {
     //const [currentPage, setCurrentPage] = useState(1);
     const [map, setMap] = useState("%");
     const [maps, setMaps] = useState([]);
-
+    const [mapExist, setMapExist] = useState({});
     //Search:
     const [text, setText] = useState("");
     const [serach, setUsingSearch] = useState(false);
@@ -32,7 +33,7 @@ export default function MainSharpTimer() {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
-    const playersPerPage = 20;
+    const playersPerPage = 10;
 
     const params = new URLSearchParams(searchParams.toString());
 
@@ -63,7 +64,13 @@ export default function MainSharpTimer() {
                 const response = await fetch(`/api/sharptimer/maps?type=${type}`);
                 const data = await response.json();
                 setMaps(data.data);
-                setMap("surf_kitsune");
+                setMap(data.data[0].MapName);
+                setMapExist({
+                    surf: data.surf,
+                    bhop: data.bhop,
+                    kz: data.kz,
+                    other: data.other,
+                })
             }
             catch (error) {
                 console.log("Error fetching maps!");
@@ -124,21 +131,36 @@ export default function MainSharpTimer() {
 
     return (
         <div className="flex w-full gap-2">
-            <div className=" rounded-md w-[500px]">
+            <div className=" rounded-md w-[500px] max-w-[500px]">
                 <div className="grid grid-cols-3  grid-rows-2 gap-2 justify-between mb-2">
                     <Button className="col-span-3 h-[42px]" variant="secondary" onClick={() => {
                         changeType("global");
                     }}>Global</Button>
-                    <Button onClick={() => {
-                        changeType("surf");
-                    }}
-                        variant="secondary">Surf</Button>
-                    <Button onClick={() => {
-                        changeType("kz");
-                    }} variant="secondary">KZ</Button>
-                    <Button onClick={() => {
-                        changeType("bhop");
-                    }} variant="secondary">BHOP</Button>
+                    {
+                        mapExist.surf ? (
+                            <Button onClick={() => {
+                                changeType("surf");
+                            }}
+                                variant="secondary">Surf</Button>
+                        ) : ""
+                    }
+                    {
+                        mapExist.bhop ? (
+                            <Button onClick={() => {
+                                changeType("bhop");
+                            }}
+                                variant="secondary">Bhop</Button>
+                        ) : ""
+                    }
+                    {
+                        mapExist.kz ? (
+                            <Button onClick={() => {
+                                changeType("kz");
+                            }}
+                                variant="secondary">Kz</Button>
+                        ) : ""
+                    }
+
                 </div>
 
                 <Select value={map} onValueChange={(e) => {
@@ -167,16 +189,17 @@ export default function MainSharpTimer() {
                     onChange={(e) => {
                         setText(e.target.value)
                     }} />
-
-                <STPagination
-                    totaldata={totaldata}
-                />
-
             </div>
             <div className="rounded-md w-full">
                 {loading == true ? (
                     <div>
-                        Loading!
+                        <div className="flex justify-center ">
+                            <main className="flex flex-col container text-center">
+                                {[...Array(playersPerPage)].map((_, i) => (
+                                    <Skeleton key={i} className="grid grid-cols-4 p-2 border border-neutral-800 mb-2 h-[58px]" />
+                                ))}
+                            </main>
+                        </div>
                     </div>
                 ) : (
                     <div>
@@ -216,6 +239,9 @@ export default function MainSharpTimer() {
                         ))}
                     </div>
                 )}
+                <STPagination
+                    totaldata={totaldata}
+                />
             </div>
         </div>
     )
