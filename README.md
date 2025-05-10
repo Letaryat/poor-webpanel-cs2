@@ -1,3 +1,6 @@
+## lol:
+first app made in nextjs so it might be shit but still work in progress. Sometimes it works I would not recommend using it for now in any cases XD
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
