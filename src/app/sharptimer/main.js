@@ -99,8 +99,7 @@ export default function MainSharpTimer() {
             clearTimeout(debounceTimeout);
         }
         const timeout = setTimeout(() => {
-            params.set("page", 1);
-            router.push(`${pathname}?${params.toString()}`, { scroll: false });
+            restartPage();
             setUsingSearch(true);
             fetchPlayerRecords();
             setDisplay(true);
@@ -111,6 +110,16 @@ export default function MainSharpTimer() {
 
     }, [text]);
 
+    const restartPage = () => {
+        params.set("page", 1);
+        router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    }
+
+    const changeType = (type) => {
+        setType(type);
+        setText("");
+        restartPage();
+    }
 
 
     return (
@@ -118,25 +127,24 @@ export default function MainSharpTimer() {
             <div className=" rounded-md w-[500px]">
                 <div className="grid grid-cols-3  grid-rows-2 gap-2 justify-between mb-2">
                     <Button className="col-span-3 h-[42px]" variant="secondary" onClick={() => {
-                        setType("global");
-                        setText("");
+                        changeType("global");
                     }}>Global</Button>
                     <Button onClick={() => {
-                        setType("surf");
-                        setText("");
+                        changeType("surf");
                     }}
                         variant="secondary">Surf</Button>
                     <Button onClick={() => {
-                        setType("kz");
-                        setText("");
+                        changeType("kz");
                     }} variant="secondary">KZ</Button>
                     <Button onClick={() => {
-                        setType("bhop");
-                        setText("");
+                        changeType("bhop");
                     }} variant="secondary">BHOP</Button>
                 </div>
 
-                <Select value={map} onValueChange={(e) => setMap(e)}>
+                <Select value={map} onValueChange={(e) => {
+                    setMap(e);
+                    restartPage();
+                }}>
                     <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select a fruit" />
                     </SelectTrigger>
@@ -160,9 +168,9 @@ export default function MainSharpTimer() {
                         setText(e.target.value)
                     }} />
 
-                    <STPagination
+                <STPagination
                     totaldata={totaldata}
-                    />
+                />
 
             </div>
             <div className="rounded-md w-full">
