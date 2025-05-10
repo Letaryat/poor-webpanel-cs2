@@ -1,19 +1,18 @@
-
 ZENITH_DATABASE='{
-    "0": { "name": "Arena", "url": "mysql://username:@host:port/database" },
-    "1": { "name": "Mirage", "url": "mysql://username:@host:port/database" }
+    "0": { "name": "Arena", "url": "mysql://root:rootpassword@localhost:3306/srv79571" }
 }'
 
-SIMPLEADMIN_DATABASE="mysql://root:@localhost:3306/db_simpleadmin1"
+SIMPLEADMIN_DATABASE="mysql://root:rootpassword@localhost:3306/m1043_sourcebans"
+
+SHARPTIMER_DATABASE="mysql://root:rootpassword@localhost:3306/db_98989"
+
+NEXT_PUBLIC_SIMPLEADMIN_ADMINS='["76561199466567949","76561199466567912"]'
 
 NEXT_PUBLIC_CUSTOMURL='{"Discord": "url", "Steam Group": "url"}'
+
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET="kutaskozlaeksdeee"
 
 STEAM_API_KEY = ""
 
 
-INTERNAL_API_KEY="siema"
-
-NEXT_PUBLIC_API_URL=http://192.168.33.6:3000/
-
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET="string"

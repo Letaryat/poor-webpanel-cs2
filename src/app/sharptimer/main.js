@@ -15,14 +15,15 @@ import { Input } from "@/components/ui/input";
 export default function MainSharpTimer() {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
+    const [dataSearch, setDataSearch] = useState([]);
     const [type, setType] = useState("global");
     const [totaldata, setTotalData] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [map, setMap] = useState("%");
     const [maps, setMaps] = useState([]);
 
+    //Search:
     const [text, setText] = useState("");
-    const [players, setPlayers] = useState("");
     const [serach, setUsingSearch] = useState(false);
     const [display, setDisplay] = useState(false);
     const [debounceTimeout, setDebounceTimeout] = useState(null);
@@ -34,6 +35,7 @@ export default function MainSharpTimer() {
 
     const params = new URLSearchParams(searchParams.toString());
 
+    //Fetching data:
     useEffect(() => {
         const paramsPage = parseInt(params.get("page")) || 1;
         setCurrentPage(paramsPage)
@@ -69,13 +71,14 @@ export default function MainSharpTimer() {
         fetchMaps(type);
     }, [type])
 
+    //Searchbar:
+
     async function fetchPlayerRecords() {
         try {
-            setData([]);
             setLoading(true);
             const response = await fetch(`/api/sharptimer/records?type=${type}&player=${text}`)
             const data = await response.json();
-            setData(data.data);
+            setDataSearch(data.data);
             setLoading(false);
         }
         catch (error) {
@@ -86,7 +89,7 @@ export default function MainSharpTimer() {
 
     useEffect(() => {
         if (text === "") {
-            setPlayers([]);
+            setDataSearch([]);
             setDisplay(false);
             setUsingSearch(false);
             return;
@@ -107,12 +110,34 @@ export default function MainSharpTimer() {
 
     }, [text]);
 
+    //Pagination:
+    const nextPage = () => {
+        setCurrentPage(currentPage + 1);
+        paramPage(currentPage + 1);
+    }
+
+    const prevPage = () => {
+        const newPage = Math.max(currentPage - 1, 1);
+        setCurrentPage(newPage);
+        paramPage(newPage);
+    }
+
+    const paramPage = (value) => {
+        params.set("page", value);
+        router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    };
+
+
+    const totalPages = Math.ceil(totaldata / 10) || 1;
+    const startPage = Math.max(1, Math.min(currentPage - 3, totalPages - 6));
+    const endPage = Math.min(totalPages, startPage + 6);
+    const pagesToShow = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+
     return (
         <div className="flex w-full gap-2">
             <div className=" rounded-md w-[500px]">
-                <h3 className="text-lg font-semibold">Options</h3>
                 <div className="grid grid-cols-3  grid-rows-2 gap-2 justify-between mb-2">
-                    <Button className="col-span-3" variant="secondary" onClick={() => {
+                    <Button className="col-span-3 h-[42px]" variant="secondary" onClick={() => {
                         setType("global");
                         setText("");
                     }}>Global</Button>
@@ -155,9 +180,29 @@ export default function MainSharpTimer() {
                         setText(e.target.value)
                     }} />
 
+                <div className="flex gap-1">
+                    <button
+                        onClick={nextPage}
+                        className="px-4 py-2 bg-neutral-900 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={(currentPage * 10) >= totaldata}
+                    >
+                        Next
+                    </button>
+                    <button
+                        onClick={() => {
+                            setCurrentPage(totalPages);
+                            paramPage(totalPages);
+                        }}
+                        className="px-4 py-2 bg-neutral-900 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={(currentPage * 10) >= totaldata}
+                    >
+                        Last
+                    </button>
+                </div>
+
             </div>
             <div className="rounded-md w-full">
-                {loading == true || data.length < 0 ? (
+                {loading == true ? (
                     <div>
                         Loading!
                     </div>
@@ -171,15 +216,31 @@ export default function MainSharpTimer() {
                             <div>Times finished</div>
                         </div>
                         {data.map((p, i) => (
-                            <PlayerRow
-                                key={i}
-                                sid={p.SteamID}
-                                name={p.PlayerName}
-                                time={p.FormattedTime}
-                                style={p.Style}
-                                timesfinished={p.TimesFinished}
-                                mapname={p.MapName}
-                            />
+                            <div key={i} className={`w-full ${display === true ? "hidden" : "block"}`}>
+                                <PlayerRow
+                                    key={i}
+                                    sid={p.SteamID}
+                                    name={p.PlayerName}
+                                    time={p.FormattedTime}
+                                    style={p.Style}
+                                    timesfinished={p.TimesFinished}
+                                    mapname={p.MapName}
+                                />
+                            </div>
+
+                        ))}
+                        {dataSearch.map((p, i) => (
+                            <div key={i}>
+                                <PlayerRow className={`w-full ${display === true ? "hidden" : "block"}`}
+                                    key={i}
+                                    sid={p.SteamID}
+                                    name={p.PlayerName}
+                                    time={p.FormattedTime}
+                                    style={p.Style}
+                                    timesfinished={p.TimesFinished}
+                                    mapname={p.MapName}
+                                />
+                            </div>
                         ))}
                     </div>
                 )}
