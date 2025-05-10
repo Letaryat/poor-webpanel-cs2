@@ -4,10 +4,264 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("ZENITH_DATABASE")
+  url      = env("ZENITH_DATABASE2")
 }
 
+model VersionInfo {
+  Version     BigInt    @unique(map: "UC_Version")
+  AppliedOn   DateTime? @db.DateTime(0)
+  Description String?   @db.VarChar(1024)
+}
 
+model VipTags_Players {
+  SteamID    String   @id @db.VarChar(255)
+  Tag        String?  @db.VarChar(50)
+  TagColor   String?  @db.VarChar(50)
+  NameColor  String?  @db.VarChar(50)
+  ChatColor  String?  @db.VarChar(50)
+  Visibility Boolean?
+}
+
+model sklepcs_vip {
+  id       Int                  @id @default(autoincrement()) @db.UnsignedInt
+  authtype sklepcs_vip_authtype
+  identity String               @db.VarChar(65)
+  flags    String               @db.VarChar(30)
+  name     String               @db.VarChar(65)
+  immunity Int                  @db.UnsignedInt
+  serwer   String?              @db.VarChar(10)
+  koniec   DateTime?            @db.Timestamp(0)
+  admin    String?              @db.VarChar(50)
+}
+
+model store_equipments {
+  id       Int    @id @default(autoincrement())
+  SteamID  BigInt @db.UnsignedBigInt
+  Type     String @db.VarChar(16)
+  UniqueId String @db.VarChar(256)
+  Slot     Int?
+}
+
+model store_items {
+  id               Int      @id @default(autoincrement())
+  SteamID          BigInt   @db.UnsignedBigInt
+  Price            Int      @db.UnsignedInt
+  Type             String   @db.VarChar(16)
+  UniqueId         String   @db.VarChar(256)
+  DateOfPurchase   DateTime @db.DateTime(0)
+  DateOfExpiration DateTime @db.DateTime(0)
+}
+
+model store_players {
+  id             Int      @id @unique(map: "id") @default(autoincrement())
+  SteamID        BigInt   @unique(map: "SteamID") @db.UnsignedBigInt
+  PlayerName     String?  @db.VarChar(255)
+  Credits        Int
+  DateOfJoin     DateTime @db.DateTime(0)
+  DateOfLastJoin DateTime @db.DateTime(0)
+  Vip            Boolean
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model testk4_arenas {
+  steamid64 BigInt?  @unique(map: "steamid64")
+  rifle     Int?
+  sniper    Int?
+  shotgun   Int?
+  smg       Int?
+  lmg       Int?
+  pistol    Int?
+  rounds    String   @db.VarChar(256)
+  lastseen  DateTime @db.Timestamp(0)
+
+  @@map("testk4-arenas")
+  @@ignore
+}
+
+model wp_player_agents {
+  steamid  String  @unique(map: "steamid") @db.VarChar(18)
+  agent_ct String? @db.VarChar(64)
+  agent_t  String? @db.VarChar(64)
+}
+
+model wp_player_gloves {
+  steamid         String @db.VarChar(18)
+  weapon_team     Int
+  weapon_defindex Int
+
+  @@unique([steamid, weapon_team], map: "steamid")
+}
+
+model wp_player_knife {
+  steamid     String @db.VarChar(18)
+  weapon_team Int
+  knife       String @db.VarChar(64)
+
+  @@unique([steamid, weapon_team], map: "steamid")
+}
+
+model wp_player_music {
+  steamid     String @unique(map: "steamid") @db.VarChar(64)
+  music_id    Int
+  weapon_team Int
+}
+
+model wp_player_pins {
+  steamid     String @unique(map: "steamid") @db.VarChar(64)
+  id          Int
+  weapon_team Int
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model wp_player_skins {
+  steamid               String  @db.VarChar(18)
+  weapon_team           Int
+  weapon_defindex       Int
+  weapon_paint_id       Int
+  weapon_wear           Float   @default(0.000001) @db.Float
+  weapon_seed           Int     @default(0)
+  weapon_nametag        String? @db.VarChar(128)
+  weapon_stattrak       Boolean @default(false)
+  weapon_stattrak_count Int     @default(0)
+  weapon_sticker_0      String  @default("0;0;0;0;0;0;0") @db.VarChar(128)
+  weapon_sticker_1      String  @default("0;0;0;0;0;0;0") @db.VarChar(128)
+  weapon_sticker_2      String  @default("0;0;0;0;0;0;0") @db.VarChar(128)
+  weapon_sticker_3      String  @default("0;0;0;0;0;0;0") @db.VarChar(128)
+  weapon_sticker_4      String  @default("0;0;0;0;0;0;0") @db.VarChar(128)
+  weapon_keychain       String  @default("0;0;0;0;0") @db.VarChar(128)
+
+  @@ignore
+}
+
+model zenith_bans_admin_group_permissions {
+  id                       Int                      @id @default(autoincrement())
+  group_id                 Int
+  permission               String                   @db.VarChar(100)
+  zenith_bans_admin_groups zenith_bans_admin_groups @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_admin_group_permissions_group_id")
+
+  @@index([group_id], map: "FK_admin_group_permissions_group_id")
+}
+
+model zenith_bans_admin_groups {
+  id                                  Int                                   @id @default(autoincrement())
+  name                                String                                @unique(map: "IX_zenith_bans_admin_groups_name") @db.VarChar(50)
+  immunity                            Int?
+  zenith_bans_admin_group_permissions zenith_bans_admin_group_permissions[]
+}
+
+model zenith_bans_ip_addresses {
+  id                  Int                 @id @default(autoincrement())
+  player_id           Int
+  ip_address          String              @db.VarChar(45)
+  zenith_bans_players zenith_bans_players @relation(fields: [player_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_ip_addresses_player_id")
+
+  @@unique([player_id, ip_address], map: "unique_player_ip")
+}
+
+model zenith_bans_player_groups {
+  id                       Int                      @id @default(autoincrement())
+  player_rank_id           Int
+  group_name               String                   @db.VarChar(50)
+  zenith_bans_player_ranks zenith_bans_player_ranks @relation(fields: [player_rank_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_player_groups_rank_id")
+
+  @@index([player_rank_id], map: "FK_player_groups_rank_id")
+}
+
+model zenith_bans_player_overrides {
+  id                       Int                      @id @default(autoincrement())
+  player_rank_id           Int
+  command                  String                   @db.VarChar(100)
+  value                    Boolean
+  zenith_bans_player_ranks zenith_bans_player_ranks @relation(fields: [player_rank_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_player_overrides_rank_id")
+
+  @@index([player_rank_id], map: "FK_player_overrides_rank_id")
+}
+
+model zenith_bans_player_permissions {
+  id                       Int                      @id @default(autoincrement())
+  player_rank_id           Int
+  permission               String                   @db.VarChar(100)
+  zenith_bans_player_ranks zenith_bans_player_ranks @relation(fields: [player_rank_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_player_permissions_rank_id")
+
+  @@index([player_rank_id], map: "FK_player_permissions_rank_id")
+}
+
+model zenith_bans_player_ranks {
+  id                             Int                              @id @default(autoincrement())
+  player_id                      Int
+  server_ip                      String                           @db.VarChar(50)
+  immunity                       Int?
+  rank_expiry                    DateTime?                        @db.DateTime(0)
+  zenith_bans_player_groups      zenith_bans_player_groups[]
+  zenith_bans_player_overrides   zenith_bans_player_overrides[]
+  zenith_bans_player_permissions zenith_bans_player_permissions[]
+  zenith_bans_players            zenith_bans_players              @relation(fields: [player_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_player_ranks_player_id")
+
+  @@unique([player_id, server_ip], map: "unique_player_server")
+}
+
+model zenith_bans_players {
+  id                                                                                                 Int                           @id @default(autoincrement())
+  steam_id                                                                                           BigInt                        @unique(map: "IX_zenith_bans_players_steam_id")
+  name                                                                                               String?                       @db.VarChar(64)
+  last_online                                                                                        DateTime?                     @db.DateTime(0)
+  current_server                                                                                     String?                       @db.VarChar(50)
+  zenith_bans_ip_addresses                                                                           zenith_bans_ip_addresses[]
+  zenith_bans_player_ranks                                                                           zenith_bans_player_ranks[]
+  zenith_bans_punishments_zenith_bans_punishments_admin_idTozenith_bans_players                      zenith_bans_punishments[]     @relation("zenith_bans_punishments_admin_idTozenith_bans_players")
+  zenith_bans_punishments_zenith_bans_punishments_player_idTozenith_bans_players                     zenith_bans_punishments[]     @relation("zenith_bans_punishments_player_idTozenith_bans_players")
+  zenith_bans_punishments_zenith_bans_punishments_remove_admin_idTozenith_bans_players               zenith_bans_punishments[]     @relation("zenith_bans_punishments_remove_admin_idTozenith_bans_players")
+  zenith_bans_punishments_old_zenith_bans_punishments_old_admin_steam_idTozenith_bans_players        zenith_bans_punishments_old[] @relation("zenith_bans_punishments_old_admin_steam_idTozenith_bans_players")
+  zenith_bans_punishments_old_zenith_bans_punishments_old_remove_admin_steam_idTozenith_bans_players zenith_bans_punishments_old[] @relation("zenith_bans_punishments_old_remove_admin_steam_idTozenith_bans_players")
+  zenith_bans_punishments_old_zenith_bans_punishments_old_steam_idTozenith_bans_players              zenith_bans_punishments_old[] @relation("zenith_bans_punishments_old_steam_idTozenith_bans_players")
+}
+
+model zenith_bans_punishments {
+  id                                                                               Int                            @id @default(autoincrement())
+  player_id                                                                        Int
+  status                                                                           zenith_bans_punishments_status @default(active)
+  type                                                                             zenith_bans_punishments_type?
+  duration                                                                         Int?
+  created_at                                                                       DateTime?                      @db.DateTime(0)
+  expires_at                                                                       DateTime?                      @db.DateTime(0)
+  admin_id                                                                         Int?
+  removed_at                                                                       DateTime?                      @db.DateTime(0)
+  remove_admin_id                                                                  Int?
+  server_ip                                                                        String                         @default("all") @db.VarChar(50)
+  reason                                                                           String?                        @db.Text
+  remove_reason                                                                    String?                        @db.Text
+  zenith_bans_players_zenith_bans_punishments_admin_idTozenith_bans_players        zenith_bans_players?           @relation("zenith_bans_punishments_admin_idTozenith_bans_players", fields: [admin_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_punishments_admin_id")
+  zenith_bans_players_zenith_bans_punishments_player_idTozenith_bans_players       zenith_bans_players            @relation("zenith_bans_punishments_player_idTozenith_bans_players", fields: [player_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_punishments_player_id")
+  zenith_bans_players_zenith_bans_punishments_remove_admin_idTozenith_bans_players zenith_bans_players?           @relation("zenith_bans_punishments_remove_admin_idTozenith_bans_players", fields: [remove_admin_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_punishments_remove_admin_id")
+
+  @@index([admin_id], map: "FK_punishments_admin_id")
+  @@index([player_id], map: "FK_punishments_player_id")
+  @@index([remove_admin_id], map: "FK_punishments_remove_admin_id")
+}
+
+model zenith_bans_punishments_old {
+  id                                                                                         Int                                @id @default(autoincrement())
+  steam_id                                                                                   BigInt
+  type                                                                                       zenith_bans_punishments_old_type?
+  duration                                                                                   Int?
+  created_at                                                                                 DateTime?                          @db.DateTime(0)
+  expires_at                                                                                 DateTime?                          @db.DateTime(0)
+  admin_steam_id                                                                             BigInt?
+  removed_at                                                                                 DateTime?                          @db.DateTime(0)
+  remove_admin_steam_id                                                                      BigInt?
+  server_ip                                                                                  String                             @default("all") @db.VarChar(50)
+  reason                                                                                     String?                            @db.Text
+  status                                                                                     zenith_bans_punishments_old_status @default(active)
+  remove_reason                                                                              String?                            @db.Text
+  zenith_bans_players_zenith_bans_punishments_old_admin_steam_idTozenith_bans_players        zenith_bans_players?               @relation("zenith_bans_punishments_old_admin_steam_idTozenith_bans_players", fields: [admin_steam_id], references: [steam_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_punishments_admin_steam_id")
+  zenith_bans_players_zenith_bans_punishments_old_remove_admin_steam_idTozenith_bans_players zenith_bans_players?               @relation("zenith_bans_punishments_old_remove_admin_steam_idTozenith_bans_players", fields: [remove_admin_steam_id], references: [steam_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_punishments_remove_admin_steam_id")
+  zenith_bans_players_zenith_bans_punishments_old_steam_idTozenith_bans_players              zenith_bans_players                @relation("zenith_bans_punishments_old_steam_idTozenith_bans_players", fields: [steam_id], references: [steam_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_punishments_steam_id")
+
+  @@index([admin_steam_id], map: "FK_punishments_admin_steam_id")
+  @@index([remove_admin_steam_id], map: "FK_punishments_remove_admin_steam_id")
+  @@index([steam_id], map: "FK_punishments_steam_id")
+}
 
 model zenith_map_stats {
   steam_id        String @db.VarChar(32)
@@ -55,6 +309,7 @@ model zenith_map_stats {
   @@id([steam_id, map_name])
 }
 
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model zenith_player_settings {
   steam_id                     String    @id @db.VarChar(32)
   name                         String?   @db.VarChar(64)
@@ -64,13 +319,14 @@ model zenith_player_settings {
   K4_Zenith_settings           String?   @map("K4-Zenith.settings") @db.LongText
 }
 
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model zenith_player_storage {
   steam_id                    String    @id @db.VarChar(32)
   name                        String?   @db.VarChar(64)
   last_online                 DateTime? @default(now()) @db.Timestamp(0)
+  K4_Zenith_Stats_storage     String?   @map("K4-Zenith-Stats.storage") @db.LongText
   K4_Zenith_TimeStats_storage String?   @map("K4-Zenith-TimeStats.storage") @db.LongText
   K4_Zenith_Ranks_storage     String?   @map("K4-Zenith-Ranks.storage") @db.LongText
-  K4_Zenith_Stats_storage     String?   @map("K4-Zenith-Stats.storage") @db.LongText
 }
 
 model zenith_weapon_stats {
@@ -91,4 +347,44 @@ model zenith_weapon_stats {
   gear_hits      Int    @default(0)
 
   @@id([steam_id, weapon])
+}
+
+enum sklepcs_vip_authtype {
+  steam
+  name
+  ip
+}
+
+enum zenith_bans_punishments_status {
+  active
+  warn_ban
+  expired
+  removed
+  removed_console
+}
+
+enum zenith_bans_punishments_old_type {
+  mute
+  gag
+  silence
+  ban
+  warn
+  kick
+}
+
+enum zenith_bans_punishments_type {
+  mute
+  gag
+  silence
+  ban
+  warn
+  kick
+}
+
+enum zenith_bans_punishments_old_status {
+  active
+  warn_ban
+  expired
+  removed
+  removed_console
 }
