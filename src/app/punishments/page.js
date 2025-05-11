@@ -24,13 +24,14 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Button } from "@/components/ui/button";
+import STPagination from "@/components/pagination";
+import { server } from "typescript";
 
 export default function BansPage() {
     const [loading, setLoading] = useState(true);
     const [bans, setBans] = useState([]);
     const [type, setType] = useState("bans");
     const [allbans, setAllBans] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
     const [text, setText] = useState("");
     const [players, setPlayers] = useState([]);
     const [debounceTimeout, setDebounceTimeout] = useState(null);
@@ -51,28 +52,54 @@ export default function BansPage() {
 
     const params = new URLSearchParams(searchParams.toString());
 
+    const paramType = (value) => {
+        params.set("type", value);
+        params.set('page', 1);
+        setType(value);
+        router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    };
 
-    useEffect(() => {
-        const paramsPage = Number(params.get("page")) || 1;
-        setCurrentPage(paramsPage);
-        if (usingSearch) { return; }
-        async function fetchBans(page) {
-            try {
-                setLoading(true);
-                const response = await fetch(`/api/simpleadmin/bans?page=${page}&type=${type}`)
-                const data = await response.json();
+    const paramServer = (value) => {
+        params.set("server", value);
+        params.set('page', 1);
+        setChosenServer(value);
+        router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    };
+
+    //Fetch:
+    async function fetchBans(paramsPage, type, serverChoose, h,) {
+        try {
+            setLoading(true);
+            //const response = await fetch(`/api/simpleadmin/bans?page=${paramsPage}&type=${type}`)
+            const response = await fetch(`/api/simpleadmin/search?player=${text}&type=${type}&admin=${adminsChoose}&server=${serverChoose}&page=${paramsPage}`)
+            const data = await response.json();
+            if (h === "search") {
+                setPlayers(data.players || [])
+            }
+            else {
                 setAllBans(data.total)
-                setBans(data.bans || []);
-                setLoading(false);
+                setBans(data.players || []);
             }
-            catch (error) {
-                console.log(error);
-            }
+
+            setLoading(false);
         }
-        fetchBans(paramsPage)
+        catch (error) {
+            console.log(error);
+        }
+    }
 
-    }, [type, searchParams])
+    //Fetching data
+    useEffect(() => {
+        console.log("test");
+        const paramsPage = Number(params.get("page")) || 1;
+        const paramsServer = Number(params.get("server")) || -1;
+        const paramsType = params.get("type") || "bans";
+        if (usingSearch) { return; }
+        fetchBans(paramsPage, paramsType, paramsServer)
 
+    }, [searchParams, type, adminsChoose])
+
+    //Fetching Servers
     useEffect(() => {
         async function fetchServerInfo() {
             try {
@@ -90,46 +117,13 @@ export default function BansPage() {
         fetchServerInfo();
     }, [])
 
+    //Search
     useEffect(() => {
-        if (currentPage) {
-            paramPage(currentPage);
-        }
-    }, [currentPage]);
 
-    const nextPage = () => {
-        setCurrentPage(currentPage + 1);
-        paramPage(currentPage + 1);
-    }
+        const paramsPage = Number(params.get("page")) || 1;
+        const paramsServer = Number(params.get("server")) || -1;
+        const paramsType = params.get("type") || "bans";
 
-    const prevPage = () => {
-        const newPage = Math.max(currentPage - 1, 1);
-        setCurrentPage(newPage);
-        paramPage(newPage);
-    }
-
-    const paramPage = (value) => {
-        params.set("page", value);
-        router.push(`${pathname}?${params.toString()}`, { scroll: false });
-    };
-
-    const paramServer = (value, type1) => {
-        setLoading(true);
-        params.set('page', value);
-        params.set("type", type1);
-        setType(type1);
-        setText("");
-        setChosenAdmin("-1");
-        setChosenServer("-1");
-        router.push(`${pathname}?${params.toString()}`);
-        setLoading(false);
-    };
-
-    const totalPages = Math.ceil(allbans / 10) || 1;
-    const startPage = Math.max(1, Math.min(currentPage - 3, totalPages - 6));
-    const endPage = Math.min(totalPages, startPage + 6);
-    const pagesToShow = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
-
-    useEffect(() => {
         if (text === "" && adminsChoose == "-1" && serverChoose == "-1") {
             setPlayers([]);
             setDisplay(false);
@@ -143,35 +137,15 @@ export default function BansPage() {
             params.set("page", 1);
             router.push(`${pathname}?${params.toString()}`, { scroll: false });
             setUsingSearch(true);
-            fetchPlayers();
+            fetchBans(paramsPage, paramsType,paramsServer, "search");
             setDisplay(true);
-        }, 0)
+        }, 500)
 
         setDebounceTimeout(timeout);
         return () => clearTimeout;
 
-    }, [text, adminsChoose, serverChoose, currentPage]);
+    }, [text]);
 
-    const fetchPlayers = async () => {
-        const paramsPage = Number(params.get("page")) || 1;
-        try {
-            setAllBans(null);
-            setLoading(true);
-            const response = await fetch(`/api/simpleadmin/search?player=${text}&type=${type}&admin=${adminsChoose}&server=${serverChoose}&page=${paramsPage}`);
-            const data = await response.json();
-            if (data.players === "Brak") {
-                setPlayers([]);
-            }
-            else {
-                setPlayers(data.players || []);
-                setAllBans(data.total);
-            }
-            setLoading(false);
-        }
-        catch (error) {
-            console.log(error);
-        }
-    }
 
     return (
         <div className="flex justify-center">
@@ -181,13 +155,10 @@ export default function BansPage() {
                         <div className="sticky top-2">
                             <div className="grid grid-cols-2 gap-2 justify-center items-center">
                                 <Button variant="secondary" className={`${type === "bans" ? "bg-blue-500" : ""}`} onClick={(e) => {
-                                    setChosenServer(1)
-                                    paramServer(1, "bans");
+                                    paramType("bans");
                                 }}>Bans</Button>
                                 <Button variant="secondary" className={`${type === "mutes" ? "bg-blue-500" : ""}`} onClick={(e) => {
-                                    setChosenServer(1)
-                                    paramServer(1, "mutes");
-                                    console.log(currentPage);
+                                    paramType("mutes");
                                 }}>Mutes</Button>
                             </div>
                             <div>
@@ -223,8 +194,8 @@ export default function BansPage() {
 
                                 <div className="mt-2 mb-2 grid gap-1">
                                     <RadioGroup className="gap-1" value={serverChoose} onValueChange={(value) => {
+                                        paramServer(value);
                                         setChosenServer(value);
-                                        setCurrentPage(1);
                                     }}>
                                         <div className="flex items-center space-x-1 p-3 border rounded-md bg-zinc-900">
                                             <RadioGroupItem value="-1" id="any" />
@@ -306,62 +277,14 @@ export default function BansPage() {
                     </div>
                 </div>
 
-                <div className={`flex justify-center gap-8 mt-4 `}>
-                    <div className="flex gap-1">
-                        <button
-                            onClick={() => {
-                                setCurrentPage(1)
-                                paramPage(1)
-                            }}
-                            className="px-4 py-2 bg-neutral-900 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={currentPage === 1}
-                        >
-                            First
-                        </button>
-                        <button
-                            onClick={prevPage}
-                            disabled={currentPage === 1}
-                            className="px-4 py-2 bg-neutral-900 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            Previous
-                        </button>
-                    </div>
+                {usingSearch ? "" : (
+                    <STPagination
+                        totaldata={allbans}
+                    />
+                )
 
-                    <div className="flex gap-2">
-                        {pagesToShow.map((page) => (
-                            <button
-                                key={page}
-                                onClick={() => {
-                                    setCurrentPage(page)
-                                    paramPage(page)
-                                }
-                                }
-                                className={`px-3 py-1 rounded ${Number(currentPage) === page ? 'bg-blue-500' : 'bg-neutral-800'}`}
-                            >
-                                {page}
-                            </button>
-                        ))}
-                    </div>
-                    <div className="flex gap-1">
-                        <button
-                            onClick={nextPage}
-                            className="px-4 py-2 bg-neutral-900 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={(currentPage * 10) >= allbans}
-                        >
-                            Next
-                        </button>
-                        <button
-                            onClick={() => {
-                                setCurrentPage(totalPages);
-                                paramPage(totalPages);
-                            }}
-                            className="px-4 py-2 bg-neutral-900 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={(currentPage * 10) >= allbans}
-                        >
-                            Last
-                        </button>
-                    </div>
-                </div>
+                }
+
 
 
             </main>

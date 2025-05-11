@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select"
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import STPagination from "./pagination"
+import STPagination from "@/components/pagination"
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function MainSharpTimer() {

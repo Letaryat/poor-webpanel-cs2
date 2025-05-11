@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import PlayerSearch from "./search";
 import { useSearchParams, usePathname, useRouter } from 'next/navigation'
-
+import STPagination from "@/components/pagination";
 
 
 export default function ZenithRanking() {
@@ -157,62 +157,7 @@ export default function ZenithRanking() {
                             ))}
                 </div>
 
-                <div className="flex justify-center gap-8 mt-4">
-                    <div className="flex gap-1">
-                        <button
-                            onClick={() => {
-                                setCurrentPage(1)
-                                paramPage(1)
-                            }}
-                            className="px-4 py-2 bg-neutral-900 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={currentPage === 1}
-                        >
-                            First
-                        </button>
-                        <button
-                            onClick={prevPage}
-                            disabled={currentPage === 1}
-                            className="px-4 py-2 bg-neutral-900 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            Previous
-                        </button>
-                    </div>
-
-                    <div className="flex gap-2">
-                        {pagesToShow.map((page) => (
-                            <button
-                                key={page}
-                                onClick={() => {
-                                    setCurrentPage(page)
-                                    paramPage(page)
-                                }
-                                }
-                                className={`px-3 py-1 rounded ${currentPage === page ? 'bg-blue-500' : 'bg-neutral-800'}`}
-                            >
-                                {page}
-                            </button>
-                        ))}
-                    </div>
-                    <div className="flex gap-1">
-                        <button
-                            onClick={nextPage}
-                            className="px-4 py-2 bg-neutral-900 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={(currentPage * playersPerPage) >= totalPlayers}
-                        >
-                            Next
-                        </button>
-                        <button
-                            onClick={() => {
-                                setCurrentPage(totalPages);
-                                paramPage(totalPages);
-                            }}
-                            className="px-4 py-2 bg-neutral-900 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={(currentPage * playersPerPage) >= totalPlayers}
-                        >
-                            Last
-                        </button>
-                    </div>
-                </div>
+                <STPagination totaldata={totalPlayers}/>
             </main>
         </div>
     );
