@@ -1,3 +1,6 @@
+> [!CAUTION]
+> Bare in mind that this project is still in "alpha". Might have many bugs and it is not recommended to use it as a public app.
+
 # poor-webpanel-cs2
 Web panel for CounterStrike 2. Supports CounterStrikeSharp plugins K4-Zenith (ranking system), Simpleadmin and Sharptimer. 
 
