@@ -3,6 +3,12 @@ first app made in nextjs so it might be shit but still work in progress. Sometim
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Support
+Most of my work is done for free and if you would like to support me as a poor-developer and motivate me to a further and faster development, please consider donating using ko-fi.
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/H2H8TK0L9)
+
+Many thanks. 
+
 ## Getting Started
 
 First, run the development server:
