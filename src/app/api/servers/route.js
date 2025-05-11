@@ -8,12 +8,14 @@ export async function GET() {
             host: "91.224.117.106",
             port: 27015,
         },
+        /*
         {
             name: "Surf",
             type: "counterstrike2",
             host: "51.83.172.143",
             port: 23580,
         },
+        */
         {
             name: "1",
             type: "counterstrike2",
