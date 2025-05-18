@@ -7,7 +7,7 @@ export default async function SharpTimerProfile({ params, searchParams }) {
     return (
         <div className="flex justify-center">
             <main className="relative flex container gap-2 flex-col">
-                <SharptimerPlayerHeader/>
+                <SharptimerPlayerHeader id={id}/>
                 <SharpTimerPlayerData id={id}/>
             </main>
         </div>

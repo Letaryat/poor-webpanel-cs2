@@ -31,7 +31,7 @@ export default async function SharpTimerPlayerData({ id }) {
                 <span>Last finished on:</span>
             </div>
             {playerRecords.map((i, k) => (
-                <div className="p-2 grid grid-cols-6 w-full border-b text-center" key={k}>
+                <div className="p-2 grid grid-cols-6 w-full border-b text-center hover:bg-zinc-900" key={k}>
                     <span>{i.MapName}</span>
                     <span>{i.PlayerName}</span>
                     <span>{i.FormattedTime}</span>
