@@ -81,7 +81,7 @@ export default async function MainPlayerStats({ id, sid }) {
     await prisma.$disconnect();
     return (
         <div>
-            <div className="grid grid-cols-5 grid-rows-6 gap-2 h-[850px] mb-2">
+            <div className="flex flex-col lg:grid grid-cols-5 grid-rows-6 gap-2 lg:h-[850px] relative mb-2">
                 <div className="relative overflow-hidden border border-neutral-800 bg-neutral-900 p-2 text-center rounded-md flex justify-center items-center" >
                     <div className="flex flex-col">
                         <p className="text-xl">Kills</p>

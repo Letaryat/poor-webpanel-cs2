@@ -46,7 +46,7 @@ export async function WeaponFavStats({ id, sid }) {
                     <h3 className="font-semibold text-2xl uppercase">{weaponStats[0].weapon}</h3>
                     <Image className="rounded-xl" src={"/weapons/ak47.webp"} width={200} height={200} alt="pfp" />
                 </div>
-                <div className="grid grid-cols-2 gap-2 justify-center items-center">
+                <div className="flex flex-col lg:grid grid-cols-2 gap-2 justify-center items-center">
                     <ul className="flex flex-col gap-2">
                         <li >
                         <p className="text-lg">Kills</p>
