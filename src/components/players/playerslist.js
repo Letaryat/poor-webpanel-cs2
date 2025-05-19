@@ -3,14 +3,14 @@ import Image from "next/image"
 import { StylePoints, CalculateBackground, CalculateColor, ShortNickname } from '@/lib/playerfunctions' 
 export function PlayerListRow({ position, nickname, points, rank, avatar, kills, deaths, time, kd }) {
     return (
-        <div className={`grid grid-cols-8 relative p-2 border border-neutral-800 mb-1 items-center bg-neutral-900 rounded-md transition ease-in-out hover:-translate-y-1
+        <div className={`lg:grid lg:grid-cols-8 relative p-2 border border-neutral-800 mb-1 items-center bg-neutral-900 rounded-md transition ease-in-out hover:-translate-y-1
         ${position == "1" ? "First" : ""}
         ${position == "2" ? "Second" : ""}
         ${position == "3" ? "Third" : ""}
-        playerlistrow`}
+        playerlistrow md:flex md:flex-col md:gap-2`}
         >
             <div>{position}.</div>
-            <div className="flex gap-6 items-center">
+            <div className="justify-center md:justify-normal flex gap-6 items-center ">
                 <Avatar>
                     <AvatarImage src={avatar} />
                     <AvatarFallback>{nickname}</AvatarFallback>

@@ -122,7 +122,7 @@ export default function ZenithRanking() {
                     <PlayerSearch serverid={clickedServer} />
                 </div>
                 <div>
-                    <div className="grid grid-cols-8 p-2 border border-neutral-800 mb-2 rounded-md bg-neutral-900 font-bold">
+                <div className="hidden md:grid grid-cols-8 p-2 border  border-neutral-800 mb-2 rounded-md bg-neutral-900 font-bold ">
                         <div>Position</div>
                         <div>Nickname</div>
                         <div>Points</div>
