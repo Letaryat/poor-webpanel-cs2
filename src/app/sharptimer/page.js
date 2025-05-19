@@ -3,7 +3,7 @@ import MainSharpTimer from "./main"
 export default function SharpTimerPage() {
     return (
         <div className="flex justify-center">
-            <main className="relative flex container gap-2 flex-col">
+            <main className="relative flex  container gap-2 flex-col">
                 <div className="rounded-md bg-red-50 w-full h-52 flex justify-center items-center relative">
                     <div className="rounded-md" style={
                     {

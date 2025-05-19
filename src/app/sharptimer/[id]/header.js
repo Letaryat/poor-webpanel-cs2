@@ -19,7 +19,7 @@ export default async function SharptimerPlayerHeader({id}) {
     }
     
     return (
-        <div className="ProfileHeader relative rounded-md grid-cols-2 grid gap-2" style={{
+        <div className="ProfileHeader relative rounded-md lg:grid lg:grid-cols-2  gap-2" style={{
             width: "100%",
         }}>
             <div className="flex items-center p-2">

@@ -1,7 +1,23 @@
 'use client'
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-
+import { useEffect, useState } from "react";
 export default function STPagination({ totaldata }) {
+
+    //rwd:
+    const [windowWidth, setWindowWidth] = useState(1024);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        }
+        
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    },[])
+
+    const maxVisiblePages = windowWidth < 768 ? 3 : 7;
+
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -10,10 +26,17 @@ export default function STPagination({ totaldata }) {
     const params = new URLSearchParams(searchParams.toString());
 
     const currentPage = parseInt(params.get("page")) || 1;
-
     const totalPages = Math.ceil(totaldata / playersPerPage) || 1;
-    const startPage = Math.max(1, Math.min(currentPage - 3, totalPages - 6));
-    const endPage = Math.min(totalPages, startPage + 6);
+
+    const half = Math.floor(maxVisiblePages / 2);
+
+    let startPage = Math.max(1, currentPage - half);
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+    startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
     const pagesToShow = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
 
     const paramPage = (value) => {

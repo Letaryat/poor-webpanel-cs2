@@ -22,7 +22,7 @@ export default async function SharpTimerPlayerData({ id }) {
 
     return (
         <div>
-            <div className="p-2 grid grid-cols-6 w-full text-center bg-zinc-900 mb-2 rounded-md">
+            <div className="hidden lg:p-2 lg:grid grid-cols-6 w-full text-center bg-zinc-900 mb-2 rounded-md">
                 <span>Map name</span>
                 <span>Nickname</span>
                 <span>Time</span>
@@ -31,7 +31,7 @@ export default async function SharpTimerPlayerData({ id }) {
                 <span>Last finished on:</span>
             </div>
             {playerRecords.map((i, k) => (
-                <div className="p-2 grid grid-cols-6 w-full border-b text-center hover:bg-zinc-900" key={k}>
+                <div className="p-2 flex flex-col lg:grid lg:grid-cols-6 w-full border-b text-center hover:bg-zinc-900" key={k}>
                     <span>{i.MapName}</span>
                     <span>{i.PlayerName}</span>
                     <span>{i.FormattedTime}</span>

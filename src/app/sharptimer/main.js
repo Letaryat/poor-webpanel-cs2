@@ -130,8 +130,8 @@ export default function MainSharpTimer() {
 
 
     return (
-        <div className="flex w-full gap-2">
-            <div className=" rounded-md w-[500px] max-w-[500px]">
+        <div className="flex flex-col md:flex-row w-full gap-2">
+            <div className="rounded-md md:w-[500px]">
                 <div className="grid grid-cols-3  grid-rows-2 gap-2 justify-between mb-2">
                     <Button className={`col-span-3 ${type === "global" ? "bg-blue-500" : ""}`} variant="secondary" onClick={() => {
                         changeType("global");

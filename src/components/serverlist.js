@@ -47,7 +47,7 @@ export function ServerList() {
     }
 
     return (
-        <div className="grid grid-cols-3 justify-center gap-2">
+        <div className="flex flex-col md:grid md:grid-cols-3 justify-center gap-2">
             {
             serverData.map((server, i) => (
                 <div key={i} className="flex relative serverCard rounded-sm h-[150px] justify-center items-center">
