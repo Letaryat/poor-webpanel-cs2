@@ -64,6 +64,13 @@ export default function BansPage() {
         params.set('page', 1);
         setChosenServer(value);
         router.push(`${pathname}?${params.toString()}`, { scroll: false });
+        if(usingSearch)
+        {
+            const paramsPage = Number(params.get("page")) || 1;
+            const paramsType = params.get("type") || "bans";
+            fetchBans(paramsPage, paramsType, value, "search");
+            setDisplay(true);
+        }
     };
 
     //Fetch:
