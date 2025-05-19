@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation";
 import {
     Dialog,
     DialogContent,
@@ -25,39 +26,45 @@ import {
 } from "@/components/ui/popover"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
-export default function AdminEditPunish({ banId, ogreason, usersid, type }) {
+export default function AdminEditPunish({ banId, ogreason, usersid, type, ogEnd }) {
     const [reason, setReason] = useState("");
     const [ubreason, setUBReason] = useState("");
     const [date, setDate] = useState(null);
     const [status, setStatus] = useState("ACTIVE")
     const [isOpen, setIsOpen] = useState(false);
     const admins = JSON.parse(process.env.NEXT_PUBLIC_SIMPLEADMIN_ADMINS || "[]");
+
+    const router = useRouter();
+
     if (!admins.includes(usersid)) return;
-    const handleSubmit = async () => {
-        try {
-            const formattedDate = date ? format(date, "yyyy-MM-dd HH:mm:ss") : null;
-            const res = await fetch(`/api/simpleadmin/edit`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    banId: banId,
-                    reason,
-                    end: date,
-                    status,
-                    type,
-                    ubreason
-                }),
-            });
-            if (!res.ok) {
-                throw new Error("Failed to update punishment");
-            }
+const handleSubmit = async () => {
+    try {
+        const formattedDate = date ? format(date, "yyyy-MM-dd HH:mm:ss") : ogEnd;
+        const res = await fetch(`/api/simpleadmin/edit`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                banId: banId,
+                reason,
+                end: formattedDate,
+                status,
+                type,
+                ubreason
+            }),
+        });
+
+        if (!res.ok) {
+            throw new Error("Failed to update punishment");
         }
-        catch (error) {
-            console.log(error);
-        }
+
+        window.location.reload();
+    } catch (error) {
+        console.error(error);
     }
+};
+
 
 
     const hours = Array.from({ length: 12 }, (_, i) => i + 1);

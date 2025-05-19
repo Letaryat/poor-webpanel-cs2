@@ -10,7 +10,7 @@ export default async function SharpTimerPlayerData({ id }) {
     })
 
     let playerRecords = await prisma.$queryRaw`
-    SELECT * FROM PlayerRecords WHERE SteamID = ${id}
+    SELECT * FROM PlayerRecords WHERE SteamID = ${id} ORDER BY TimerTicks
     `
 
     prisma.$disconnect();

@@ -43,3 +43,20 @@ export async function GetFavMap(id)
 
         return map;
 }
+
+export function formatDateToMySQL(dateStr) {
+        // fuck it, chatgpt
+        // not proud of that but fuck it x2
+        const iso = new Date(dateStr);
+        if (!isNaN(iso.getTime())) {
+            return iso.toISOString().slice(0, 19).replace("T", " ");
+        }
+
+        const match = /^(\d{2})\.(\d{2})\.(\d{4}), (\d{2}):(\d{2}):(\d{2})$/.exec(dateStr);
+        if (match) {
+            const [_, dd, mm, yyyy, hh, mi, ss] = match;
+            return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+        }
+
+        return null;
+    }

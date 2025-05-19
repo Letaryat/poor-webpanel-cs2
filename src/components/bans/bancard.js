@@ -11,10 +11,14 @@ import {
 } from "@/components/ui/hover-card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { SquareArrowOutUpRight, CircleUser } from 'lucide-react';
+import { calculateDays } from "@/lib/playerfunctions";
 import AdminPanelAcord from "@/app/punishments/admin";
 import Link from "next/link";
 
-function durationChange(value, status, ubreason, aubsid, aubname) {
+function durationChange(value, status, ubreason, aubsid, aubname, end) {
+
+    var today = new Date().toLocaleString() + ""
+
     if (value == 0) {
         if(status === "UNBANNED" || status === "UNMUTED"){
             return (
@@ -25,16 +29,15 @@ function durationChange(value, status, ubreason, aubsid, aubname) {
                         </span></HoverCardTrigger>
                     <HoverCardContent>
                         <div>
-                        <Link target="_blank" href={`/zenith/${aubsid}`}>
                                 <div className="flex items-center gap-2 mt-2 hover:text-blue-400 transition-all ease-in-out">
                                     <Avatar >
                                         <AvatarImage src={`/api/avatar/ifexist/${aubsid}`} />
                                         <AvatarFallback>{aubname}</AvatarFallback>
                                     </Avatar>
                                     <p >{aubname}</p>
-                                    <SquareArrowOutUpRight size={16} />
+
                                 </div>
-                            </Link>
+
                         </div>
                         <span className="text-center">
                         {ubreason}
@@ -68,16 +71,16 @@ function durationChange(value, status, ubreason, aubsid, aubname) {
                         </span></HoverCardTrigger>
                     <HoverCardContent>
                         <div>
-                        <Link target="_blank" href={`/zenith/${aubsid}`}>
+
                                 <div className="flex items-center gap-2 mt-2 hover:text-blue-400 transition-all ease-in-out">
                                     <Avatar >
                                         <AvatarImage src={`/api/avatar/ifexist/${aubsid}`} />
                                         <AvatarFallback>{aubname}</AvatarFallback>
                                     </Avatar>
                                     <p >{aubname}</p>
-                                    <SquareArrowOutUpRight size={16} />
+
                                 </div>
-                            </Link>
+
                         </div>
                         <span className="text-center">
                         {ubreason}
@@ -91,7 +94,7 @@ function durationChange(value, status, ubreason, aubsid, aubname) {
         else {
             return (
                 <span className="bg-orange-400 bg-opacity-20 text-xs font-base text-orange-400 p-2 rounded-2xl flex justify-center">
-                    {(value / 60) / 24} days
+                    {end}
                 </span>
             )
         }
@@ -122,7 +125,7 @@ export function BanCard({ id, pname, psid, asid, aname, reason, duration, end, c
                             <CircleUser/>
                             </Link>
                         </div>
-                        {durationChange(duration, status, ubreason, aubsid, aubname)}
+                        {durationChange(duration, status, ubreason, aubsid, aubname, end)}
                     </div>
                 </div>
             </AccordionTrigger>
@@ -173,7 +176,7 @@ export function BanCard({ id, pname, psid, asid, aname, reason, duration, end, c
                     </div>
                 </div>
 
-                    <AdminPanelAcord banId={id} reason={reason || "empty"} type={type}/>
+                    <AdminPanelAcord banId={id} reason={reason || "empty"} type={type} ogEnd={end}/>
 
             </AccordionContent>
         </AccordionItem>

@@ -89,6 +89,14 @@ export function CalculateBackground(value) {
 }
 
 export function UnixToTime(unix) {
-    const date = new Date(unix * 1000); // pomnóż przez 1000, bo JS używa milisekund
-    return date.toLocaleString(); // zwraca lokalną reprezentację daty i czasu
+    const date = new Date(unix * 1000); 
+    return date.toLocaleString(); 
+}
+
+export function calculateDays(startDate, endDate) {
+    let start = new Date(startDate);
+    let end = new Date(endDate);
+    let timeDifference = end - start;
+    let daysDifference = timeDifference / (1000 * 3600 * 24);
+    return daysDifference;
 }

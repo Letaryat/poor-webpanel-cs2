@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/tooltip"
 import AdminEditPunish from "./editpunish";
 
-export default function AdminPanelAcord({ banId, reason, type}) {
+export default function AdminPanelAcord({ banId, reason, type, ogEnd}) {
     const admins = JSON.parse(process.env.NEXT_PUBLIC_SIMPLEADMIN_ADMINS || "[]");
     const session = useSession();
     if (!session.data) return;
@@ -18,7 +18,7 @@ export default function AdminPanelAcord({ banId, reason, type}) {
         <div className="flex justify-center items-center flex-col">
         <h3>Admin Panel</h3>
         <div className="flex gap-2 items-center">
-            <AdminEditPunish banId={banId} usersid={session.data.user.steamid} ogreason={reason} type={type}/>
+            <AdminEditPunish banId={banId} usersid={session.data.user.steamid} ogreason={reason} type={type} ogEnd={ogEnd}/>
         </div>
         </div>
     )
