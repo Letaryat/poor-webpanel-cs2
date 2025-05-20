@@ -3,6 +3,16 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button, buttonVariants } from "@/components/ui/button"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
 export default function AddAdmin() {
     return (
         <div className="border rounded-md p-2">
@@ -18,7 +28,18 @@ export default function AddAdmin() {
                     </div>
                     <div className="flex flex-col space-y-1.5">
                         <Label htmlFor="permission">Flags / groups</Label>
-                        <Input id="permission" name="permission" placeholder="@css/admin | #css/admin" type="text"  required />
+                        <Select required>
+                            <SelectTrigger>
+                                <SelectValue placeholder="@css/root"></SelectValue>
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                <SelectLabel>Permissions</SelectLabel>
+                                <SelectItem value="apple">@css/root</SelectItem>
+                                <SelectItem value="banana">@css/admin</SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
                     </div>
                     <div className="flex flex-col space-y-1.5">
                         <Label htmlFor="immunity">Immunity</Label>
