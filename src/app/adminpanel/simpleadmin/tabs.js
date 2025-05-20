@@ -4,7 +4,8 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
-import AddAdmin from "./tasks/addadmin"
+import AddAdmin from "./forms/addadmin"
+import SaAdmins from "./data/showadmins"
 export default function Satabs() {
     return (
         <div>
@@ -16,7 +17,11 @@ export default function Satabs() {
                     <TabsTrigger value="addpunishment">Add ban / mute / gag</TabsTrigger>
                 </TabsList>
                 <TabsContent value="addadmin">
-                    <AddAdmin/>
+                    <div className="flex">
+                        <AddAdmin/>
+                        <SaAdmins/>
+                    </div>
+                    
                 </TabsContent>
                 <TabsContent value="addgroup">Change your password here.</TabsContent>
                 <TabsContent value="addserver">Make changes to your account here.</TabsContent>

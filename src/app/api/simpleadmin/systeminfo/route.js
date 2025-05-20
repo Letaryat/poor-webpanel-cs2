@@ -11,6 +11,7 @@ export async function GET() {
         });
         let dataAdmins = await prisma.$queryRaw`
             SELECT 
+                sa_admins.id,
                 sa_admins.player_name, 
                 sa_admins.player_steamid, 
                 sa_admins_flags.flag AS Flag,
